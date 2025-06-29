@@ -1,5 +1,6 @@
 from pathlib import Path
 from environs import Env
+import os
 
 env = Env()
 env.read_env()
@@ -101,7 +102,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

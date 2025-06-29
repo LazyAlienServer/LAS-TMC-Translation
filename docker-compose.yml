@@ -67,14 +67,11 @@ services:
       - celery_worker
     restart: always
   
-#  frontend:
-#    build: ./frontend
-#    container_name: vue
-#    ports:
-#      - "8080:80"
-#    depends_on:
-#      - web
-#    restart: always
+  frontend:
+    container_name: vue
+    depends_on:
+      - web
+    restart: always
 
 volumes:
   postgres_data:

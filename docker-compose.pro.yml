@@ -8,17 +8,20 @@ services:
         daphne -b 0.0.0.0 -p 8000 backend.asgi:application
       "
     environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings.prod
+      - DJANGO_SETTINGS_MODULE=backend.settings.pro
 
   celery_worker:
     environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings.prod
+      - DJANGO_SETTINGS_MODULE=backend.settings.pro
 
   celery_beat:
     environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings.prod
+      - DJANGO_SETTINGS_MODULE=backend.settings.pro
 
   frontend:
-    build:
+    build: 
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+      
