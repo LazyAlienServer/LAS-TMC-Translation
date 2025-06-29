@@ -1,0 +1,11 @@
+from celery import shared_task
+from utils.youtube import fetch_youtube_data
+
+
+@shared_task
+def refresh_youtube_cache():
+    try:
+        fetch_youtube_data()
+        return {"status": "success", "message": "Data successfully refreshed"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

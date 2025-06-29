@@ -1,0 +1,18 @@
+services:
+  web:
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings.dev
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python manage.py init_tasks &&
+        daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+      "
+
+  celery_worker:
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings.dev
+
+  celery_beat:
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings.dev
