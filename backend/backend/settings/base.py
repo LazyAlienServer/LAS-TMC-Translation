@@ -5,7 +5,7 @@ import os
 env = Env()
 env.read_env()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = env.str("SECRET_KEY")
 

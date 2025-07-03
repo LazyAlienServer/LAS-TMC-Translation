@@ -5,5 +5,5 @@ from .views import (
 )
 
 urlpatterns = [
-    path('youtube_channel_snapshot', YoutubeSnapshotView.as_view()),
+    path('youtube_channel_snapshot', YoutubeSnapshotView.as_view(), name='youtube_channel_snapshot'),
 ]

@@ -1,0 +1,13 @@
+/*  Custom tailwind themes, utilities, components, variants and base styles  */
+@import 'tailwindcss';
+
+@font-face {
+    font-family: 'PuHuiTi';
+    src: url('../fonts/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+@theme {
+    --font-sans: PuHuiTi, sans-serif;
+}
+
