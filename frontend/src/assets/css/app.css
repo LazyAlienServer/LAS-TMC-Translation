@@ -11,3 +11,25 @@
     --font-sans: PuHuiTi, sans-serif;
 }
 
+/* Custom Components */
+@layer components {
+    .navbar-link {
+        @apply hover:text-pink-500 transition-colors duration-200 hover:underline font-bold;
+    }
+    .body-container {
+        @apply flex flex-col font-sans px-10 gap-y-6;
+    }
+}
+
+/* Custom Base styles */
+@layer base {
+    h1 {
+        @apply font-bold text-4xl;
+    }
+    p {
+        @apply text-lg;
+    }
+    ul {
+        @apply text-lg;
+    }
+}
