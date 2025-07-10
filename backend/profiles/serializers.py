@@ -1,11 +1,13 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Profile
-
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.settings import api_settings
 import string
 import random
+
+from .models import Profile
 
 
 User = get_user_model()
@@ -44,3 +46,25 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class CustomLoginSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        access_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+        refresh_lifetime = api_settings.REFRESH_TOKEN_LIFETIME
+        data['access_token_lifetime'] = str(access_lifetime.total_seconds())
+        data['refresh_token_lifetime'] = str(refresh_lifetime.days())
+
+        return data
+
+
+class CustomLoginRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        access_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+        data['access_token_lifetime'] = str(access_lifetime.total_seconds())
+
+        return data

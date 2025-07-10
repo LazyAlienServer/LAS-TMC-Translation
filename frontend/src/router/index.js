@@ -1,42 +1,72 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import HomePage from '@/views/HomePage.vue'
-import ContactUsPage from "@/views/ContactUsPage.vue";
-import DonatePage from "@/views/DonatePage.vue";
-import UserLoginPage from "@/views/UserLoginPage.vue";
-import UserRegisterPage from "@/views/UserRegisterPage.vue";
-import UserProfilePage from "@/views/UserProfilePage.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+import Contact from "@/views/Contact.vue";
+import Donate from "@/views/Donate.vue";
+import Login from "@/views/Login.vue";
+import Register from "@/views/Register.vue";
+import Profile from "@/views/Profile.vue";
+import Videos from "@/views/Videos.vue"
+import { useUserStore } from "@/stores/useUserStore";
+
+
+let hasInitialized = false;
+
+router.beforeEach(async (to, _from) => {
+    const userStore = useUserStore();
+
+    if (!hasInitialized) {
+        await userStore.initializeUser();
+        hasInitialized = true;
+    }
+
+    const isLoggedIn = userStore.isLoggedIn;
+
+    if (to.meta?.requiresAuth && !isLoggedIn) {
+        return { name: 'login' };
+    }
+
+    if (to.name === "login" || to.name === "register") {
+        return { name: 'home' };
+    }
+})
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: HomePage
+        component: Home,
     },
     {
         path: '/contact-us',
         name: 'contact',
-        component: ContactUsPage
+        component: Contact,
     },
     {
         path: '/donate',
         name: 'donate',
-        component: DonatePage
+        component: Donate,
     },
     {
         path: '/login',
         name: 'login',
-        component: UserLoginPage
+        component: Login,
     },
     {
         path: '/register',
         name: 'register',
-        component: UserRegisterPage
+        component: Register,
     },
     {
         path: '/profile/:username',
         name: 'profile',
-        component: UserProfilePage
+        component: Profile,
+        meta: { requiresAuth: true },
     },
+    {
+        path: '/videos',
+        name: 'videos',
+        component: Videos,
+    }
 ]
 
 const router = createRouter({

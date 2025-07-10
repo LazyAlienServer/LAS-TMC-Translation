@@ -1,18 +1,18 @@
 <script setup>
 
-import {ref, onMounted, onUnmounted} from 'vue'
-import {fetchSnapshot} from "@/apis/snapshot";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { getChannelSnapshot } from "@/apis/snapshot";
 
 const snapshot = ref({})
 let intervalId = null
 
 async function loadSnapshot() {
   try {
-    const response = await fetchSnapshot();
+    const response = await getChannelSnapshot(snapshot);
     snapshot.value = response.data
-    console.log("Fetch channel snapshot successfully:", response.data)
+    console.log("Fetch channel snapshot successfully")
   } catch (error) {
-    console.log('Failed to fetch channel snapshot:', error)
+    console.warn('Failed to fetch channel snapshot:', error)
   }
 }
 
