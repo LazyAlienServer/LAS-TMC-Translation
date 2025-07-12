@@ -1,23 +1,30 @@
 /*  Custom tailwind themes, utilities, components, variants and base styles  */
 @import 'tailwindcss';
 
+
 @font-face {
     font-family: 'PuHuiTi';
     src: url('../fonts/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
     font-display: swap;
 }
 
+/* Custom Themes */
 @theme {
     --font-sans: PuHuiTi, sans-serif;
 }
 
+/* Custom Utilities */
+@utility custom-bg {
+    background-color: #FAFAFA;
+}
+
 /* Custom Components */
 @layer components {
-    .navbar-link {
-        @apply hover:text-pink-500 transition-colors duration-200 hover:underline font-bold;
+    .link {
+        @apply font-bold hover:text-[#3B82F6] transition-colors duration-200;
     }
     .body-container {
-        @apply flex flex-col font-sans px-10 gap-y-6;
+        @apply flex flex-col gap-y-6;
     }
 }
 
@@ -26,10 +33,22 @@
     h1 {
         @apply font-bold text-4xl;
     }
+    h2 {
+        @apply font-bold text-2xl;
+    }
     p {
         @apply text-lg;
     }
     ul {
         @apply text-lg;
+    }
+    form {
+        @apply w-full flex flex-col max-w-sm bg-white p-8 rounded-lg shadow-md space-y-6 border border-gray-200 self-center
+    }
+    button {
+        @apply w-30 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-colors self-center
+    }
+    input {
+        @apply w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400
     }
 }

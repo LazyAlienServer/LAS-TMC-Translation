@@ -1,13 +1,9 @@
 <script setup>
-
+/* Not yet ready to be mounted */
 </script>
 
 <template>
   <div class="body-container">
-    Channel videos
+    Donate to us
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -1,9 +1,16 @@
 import { defineStore } from 'pinia';
 import { ref } from "vue";
-import { loginUser, getUserProfile, refreshUserLoginToken } from "@/apis/user";
-import api from "@/apis/axiosInstance";
-import { setRefreshToken, getRefreshToken, removeRefreshToken } from "@/utils/cookies";
-/* 考虑给youtube snapshot做一个store */
+import {
+    loginUser,
+    getUserProfile,
+    refreshUserLoginToken,
+    api,
+} from "@/api";
+import {
+    setRefreshToken,
+    getRefreshToken,
+    removeRefreshToken,
+} from "@/utils";
 
 
 const useUserStore = defineStore('user', () => {
@@ -129,7 +136,7 @@ const useUserStore = defineStore('user', () => {
                 console.warn(error);
                 logout();
             }
-        } /* 两个token是不是登录之后一直存在？是不是要加上重新登录？ */
+        }
     }
 
     return {

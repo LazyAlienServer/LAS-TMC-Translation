@@ -1,13 +1,9 @@
 <script setup>
-
+import { RegisterForm } from '@/components';
 </script>
 
 <template>
   <div class="body-container">
-    Email: lastranslationteam@gmail.com
+    <RegisterForm />
   </div>
 </template>
-
-<style scoped>
-
-</style>

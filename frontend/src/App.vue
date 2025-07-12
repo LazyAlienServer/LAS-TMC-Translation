@@ -1,11 +1,17 @@
 <script setup>
-import AppHeader from "@/components/AppHeader.vue";
+import {
+  AppHeader,
+  AppFooter,
+} from "@/components";
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-300 to-pink-200 backdrop-blur-sm bg-opacity-70 text-gray-900">
+  <div class="flex flex-col min-h-screen font-sans text-[#111827]">
     <AppHeader />
-    <router-view />
+    <main class="flex-1 px-10 pt-30 custom-bg">
+      <router-view />
+    </main>
+    <AppFooter />
   </div>
 </template>
 

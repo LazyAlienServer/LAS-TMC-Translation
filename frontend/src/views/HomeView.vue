@@ -1,7 +1,11 @@
 <script setup>
 
-import { ref, onMounted, onUnmounted } from 'vue'
-import { getChannelSnapshot } from "@/apis/snapshot";
+import {
+  ref,
+  onMounted,
+  onUnmounted,
+} from 'vue'
+import { getChannelSnapshot } from "@/api";
 
 const snapshot = ref({})
 let intervalId = null
@@ -38,7 +42,3 @@ onUnmounted(() => {
     </ul>
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -55,7 +55,7 @@ class CustomLoginSerializer(TokenObtainPairSerializer):
         access_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
         refresh_lifetime = api_settings.REFRESH_TOKEN_LIFETIME
         data['access_token_lifetime'] = str(access_lifetime.total_seconds())
-        data['refresh_token_lifetime'] = str(refresh_lifetime.days())
+        data['refresh_token_lifetime'] = str(refresh_lifetime.days)
 
         return data
 

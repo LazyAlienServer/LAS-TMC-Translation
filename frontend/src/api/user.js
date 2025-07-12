@@ -9,7 +9,7 @@ function registerUser(email, password) {
 }
 
 function loginUser(email, password) {
-    return api.post('/user/login', {
+    return api.post('/user/login/', {
         email: email,
         password: password,
     });

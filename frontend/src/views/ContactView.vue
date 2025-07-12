@@ -4,10 +4,6 @@
 
 <template>
   <div class="body-container">
-    View your account here
+    <p><b>Our Email: </b>lastranslationteam@gmail.com</p>
   </div>
 </template>
-
-<style scoped>
-
-</style>

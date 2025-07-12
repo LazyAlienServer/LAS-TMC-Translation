@@ -1,13 +1,9 @@
 <script setup>
-
+import { LoginForm } from "@/components";
 </script>
 
 <template>
   <div class="body-container">
-    Login to your account
+    <LoginForm />
   </div>
 </template>
-
-<style scoped>
-
-</style>

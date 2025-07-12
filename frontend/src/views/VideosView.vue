@@ -4,10 +4,7 @@
 
 <template>
   <div class="body-container">
-    Register a new account here
+    Channel videos
   </div>
 </template>
 
-<style scoped>
-
-</style>
