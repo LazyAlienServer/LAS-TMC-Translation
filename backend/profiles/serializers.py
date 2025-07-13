@@ -48,6 +48,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+#class UpdateProfileSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Profile
+#        fields = ('username', 'avatar')
+
+#    def validate_avatar(self, value):
+#        valid_mime_formats = ['image/png', 'image/jpeg', 'image/webp']
+
+#        if value.content_type not in valid_mime_formats:
+#            raise serializers.ValidationError("Unsupported avatar file type.")
+
+#        if value.size > 2 * 1024 * 1024:
+#            raise serializers.ValidationError("Avatar File Size too large (max 2MB).")
+
+#        return value
+
+
 class CustomLoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)

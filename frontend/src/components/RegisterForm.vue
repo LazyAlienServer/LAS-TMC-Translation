@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { registerUser } from '@/api'
+import { logger, extractErrorMessage } from '@/utils';
 
 
 const router = useRouter();
@@ -10,7 +11,7 @@ const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const loading = ref(false);
-const error = ref('');
+const error = ref('');  /* the error message to user */
 
 function isValidEmail(value) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,7 +19,7 @@ function isValidEmail(value) {
 }
 
 async function handleRegister() {
-  /* Handle Register Request */
+  // Handle Register Request
   error.value = '';
   loading.value = true;
 
@@ -36,10 +37,23 @@ async function handleRegister() {
 
   try {
     await registerUser(email.value, password.value);
+
+    logger.info('User registered successfully', {
+      email: email.value,
+    });
+
     await router.push({ name: 'login' });
+
   } catch (error) {
-    console.log("Register failed: ", error);
+    const error_msg = extractErrorMessage(error);
+
+    logger.error('User registered failed', {
+      email: email.value,
+      error: error_msg,
+    });
+
     error.value = 'Register failed. Please try again';
+
   } finally {
     loading.value = false;
   }

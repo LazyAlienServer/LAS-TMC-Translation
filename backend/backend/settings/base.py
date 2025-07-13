@@ -1,7 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
 from environs import Env
-import os
 
 env = Env()
 env.read_env()
@@ -114,6 +113,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

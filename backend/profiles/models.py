@@ -32,6 +32,7 @@ class ProfileManager(BaseUserManager):
 class Profile(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
+#    avatar = models.ImageField(upload_to='avatars/')
     google_id = models.CharField(max_length=255, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
