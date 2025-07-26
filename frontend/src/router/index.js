@@ -3,7 +3,7 @@ import {
     createWebHistory,
 } from 'vue-router'
 import routes from './routes'
-import { globalBeforeEach } from './guards';
+import {globalAfterEach, globalBeforeEach} from './guards';
 
 
 const router = createRouter({
@@ -12,5 +12,6 @@ const router = createRouter({
 })
 
 router.beforeEach(globalBeforeEach)
+router.afterEach(globalAfterEach)
 
 export default router

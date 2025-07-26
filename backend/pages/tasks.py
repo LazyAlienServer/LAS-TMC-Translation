@@ -1,5 +1,5 @@
 from celery import shared_task
-from utils.youtube import fetch_youtube_data
+from core.utils.youtube import fetch_youtube_data
 
 
 @shared_task

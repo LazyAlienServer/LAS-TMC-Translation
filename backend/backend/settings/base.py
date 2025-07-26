@@ -26,8 +26,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local Apps
+    "core.apps.CoreConfig",
     "pages.apps.PagesConfig",
     "articles.apps.ArticlesConfig",
+    "logs.apps.LogsConfig",
     # 3rd-party Apps
     "rest_framework",
     "django_celery_beat",

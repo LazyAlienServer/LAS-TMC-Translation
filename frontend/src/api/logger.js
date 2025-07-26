@@ -1,7 +1,9 @@
 import api from './axiosInstance'
 
-function sendLogToServer(logEntry) {
-    return api.post('/pages/log_collect/', logEntry)
+function sendLogToServer(logsToSend) {
+    return api.post('/log/collect/', {
+        logs: logsToSend
+    })
 }
 
 export {

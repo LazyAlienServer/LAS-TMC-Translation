@@ -21,9 +21,7 @@ async function handleLogin() {
   try {
     await userStore.login(email.value, password.value);
 
-    logger.info('User logged in successfully', {
-      email: email.value,
-    });
+    logger.info('User logged in successfully');
 
     await router.push({ name: 'home' });
 
@@ -31,7 +29,6 @@ async function handleLogin() {
     const error_msg = extractErrorMessage(error);
 
     logger.error('User login failed', {
-      email: email.value,
       error: error_msg,
     });
 

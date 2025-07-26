@@ -4,8 +4,13 @@ import { useUserStore } from "@/stores";
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
 
+const logQueue = [];
+
+const FLUSH_INTERVAL = 5 * 1000  // logQueue sends to server per 5 seconds
+
 function formatMessage(level, message, extra) {
     const timestamp = new Date().toISOString();
+
     return {
         level,
         message,
@@ -26,6 +31,8 @@ function log(level, message, extra = {}) {
         userId: userStore?.userInfo?.id || null,
     });
 
+    logQueue.push(logEntry);
+
     const levelColors = {
         debug: 'gray',
         info: 'blue',
@@ -40,14 +47,27 @@ function log(level, message, extra = {}) {
         css,
         logEntry.message,
         logEntry.extra,
-    )
+    );
+}
 
-    if (level === 'info' || level === 'warn' || level === 'error') {
-        sendLogToServer(logEntry).catch((error) => {
-            console.warn('Failed to send log to server', error);
-        });
+async function flushLogs() {
+    if (logQueue.length === 0) {
+        return;
+    }
+
+    const logsToSend = [...logQueue];
+
+    try {
+        await sendLogToServer(logsToSend);
+
+        logQueue.length = [];
+
+    } catch (error) {
+        console.error('[Logger] Failed to send logs', error);
     }
 }
+
+setInterval(flushLogs, FLUSH_INTERVAL);
 
 export default {
     debug(message, extra) {

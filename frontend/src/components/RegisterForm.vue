@@ -38,9 +38,7 @@ async function handleRegister() {
   try {
     await registerUser(email.value, password.value);
 
-    logger.info('User registered successfully', {
-      email: email.value,
-    });
+    logger.info('User registered successfully');
 
     await router.push({ name: 'login' });
 
@@ -48,7 +46,6 @@ async function handleRegister() {
     const error_msg = extractErrorMessage(error);
 
     logger.error('User registered failed', {
-      email: email.value,
       error: error_msg,
     });
 

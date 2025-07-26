@@ -10,12 +10,10 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 
 function handleLogout() {
-  // Handle Logout Request TODO: fix logger.info here
-  userStore.logout();
+  // Handle Logout Request
+  logger.info("User logout successfully")
 
-  logger.info("User logout successfully", {
-    email: userInfo.email,
-  });
+  userStore.logout();
 
   router.push({ name: 'home' });
 }

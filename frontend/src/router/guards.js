@@ -13,7 +13,7 @@ async function globalBeforeEach(to) {
 
     const isLoggedIn = userStore.isLoggedIn;
 
-    if (to.meta?.requiresAuth && !isLoggedIn) {
+    if (to.meta.requiresAuth && !isLoggedIn) {
         return { name: 'login' };
     }
 
@@ -22,6 +22,16 @@ async function globalBeforeEach(to) {
     }
 }
 
+async function globalAfterEach(to) {
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    } else {
+        document.title = 'Lazy Alien Server';
+    }
+}
+
+
 export {
     globalBeforeEach,
+    globalAfterEach,
 }

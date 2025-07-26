@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from utils.youtube import CACHE_KEY
+from core.utils.youtube import CACHE_KEY
 
 
 def fetch_youtube_cache():
