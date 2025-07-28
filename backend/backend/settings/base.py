@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     # Local Apps
     "core.apps.CoreConfig",
     "pages.apps.PagesConfig",
-    "articles.apps.ArticlesConfig",
     "logs.apps.LogsConfig",
     # 3rd-party Apps
     "rest_framework",
