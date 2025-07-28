@@ -44,6 +44,7 @@ incremental==24.7.2
 kombu==5.5.0
 marshmallow==3.26.1
 packaging==24.2
+pillow==11.3.0
 prometheus_client==0.21.1
 prompt_toolkit==3.0.50
 proto-plus==1.26.1

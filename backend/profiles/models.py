@@ -1,13 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-
 from django.contrib.auth.models import BaseUserManager
+from django.core.files.storage import FileSystemStorage
+from django.utils.encoding import filepath_to_uri
+from django.conf import settings
+
+from urllib.parse import urljoin
+
+
+class AvatarStorage(FileSystemStorage):
+    def url(self, name):
+        if self.base_url is None:
+            raise ValueError("This file is not accessible via a URL.")
+        url = filepath_to_uri(name)
+        if url is not None:
+            url = url.lstrip("/")
+
+        if name.startswith("default_avatar/"):
+            return urljoin(settings.STATIC_URL, url)
+        return urljoin(self.base_url, url)
 
 
 class ProfileManager(BaseUserManager):
     use_in_migrations = True
 
+    # Superuser does not share this logic
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Email field must be filled')
@@ -30,9 +47,14 @@ class ProfileManager(BaseUserManager):
 
 
 class Profile(AbstractUser):
-    username = models.CharField(max_length=50, unique=True)
+    username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
-#    avatar = models.ImageField(upload_to='avatars/')
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        blank=True,
+        null=True,
+        storage=AvatarStorage()
+    )
     google_id = models.CharField(max_length=255, blank=True, null=True)
 
     USERNAME_FIELD = 'email'

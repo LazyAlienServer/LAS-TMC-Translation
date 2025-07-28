@@ -1,5 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
+
+from django.template.context_processors import static
 from environs import Env
 
 env = Env()
@@ -36,6 +38,15 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = "profiles.Profile"
+
+# Custom setting - default user avatars
+DEFAULT_AVATARS = [
+    'default_avatar/Axe.webp',
+    'default_avatar/Hoe.webp',
+    'default_avatar/Pickaxe.webp',
+    'default_avatar/Shovel.webp',
+    'default_avatar/Sword.webp',
+]
 
 YOUTUBE_API_KEY = env.str("YOUTUBE_API_KEY")
 YOUTUBE_CHANNEL_ID = "UCqFzvR6Atp0qBXiEzL3Bbvw"
@@ -114,8 +125,12 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

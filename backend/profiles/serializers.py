@@ -1,13 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from django.conf import settings
+from django.core.files.base import ContentFile
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.settings import api_settings
+
 import string
 import random
+import io
+from PIL import Image
 
 from .models import Profile
+from core.utils.drf_validators import FileSizeValidator, FileTypeValidator
 
 
 User = get_user_model()
@@ -22,11 +29,17 @@ def generate_unique_username():
     raise Exception("Unable to generate unique username")
 
 
+def pick_random_avatar():
+    avatar = random.choice(settings.DEFAULT_AVATARS)
+    return avatar
+
+
 class ProfileSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'email')
-        read_only_fields = ('id', 'username', 'email')
+        fields = ('id', 'avatar', 'username', 'email')
+        read_only_fields = ('id', 'email')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -35,34 +48,59 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('username', 'email', 'password')
-        read_only_fields = ('username',)
+        fields = ('avatar', 'username', 'email', 'password')
+        read_only_fields = ('avatar', 'username',)
 
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],
             username=generate_unique_username(),
+            avatar=pick_random_avatar(),
         )
+
         user.set_password(validated_data['password'])
         user.save()
+
         return user
 
 
-#class UpdateProfileSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = Profile
-#        fields = ('username', 'avatar')
+class UsernameUpdateSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        max_length=100,
+        validators=[UniqueValidator(queryset=Profile.objects.all())]
+    )
 
-#    def validate_avatar(self, value):
-#        valid_mime_formats = ['image/png', 'image/jpeg', 'image/webp']
+    class Meta:
+        model = Profile
+        fields = ('username',)
 
-#        if value.content_type not in valid_mime_formats:
-#            raise serializers.ValidationError("Unsupported avatar file type.")
 
-#        if value.size > 2 * 1024 * 1024:
-#            raise serializers.ValidationError("Avatar File Size too large (max 2MB).")
+class AvatarUpdateSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(
+        validators=[
+            FileSizeValidator(max_size_mb=2),
+            FileTypeValidator
+        ]
+    )
 
-#        return value
+    class Meta:
+        model = Profile
+        fields = ('avatar',)
+
+    def update(self, instance, validated_data):
+        avatar = validated_data.get('avatar')
+
+        # 头像处理部分来自ChatGPT
+        image = Image.open(avatar)
+        image = image.convert("RGB")
+        image.thumbnail((512, 512))
+        buffer = io.BytesIO()
+        image.save(buffer, format="WEBP", quality=85)
+        webp_file = ContentFile(buffer.getvalue())
+
+        instance.avatar.save(f"{instance.pk}_avatar.webp", webp_file, save=False)
+        instance.save()
+        return instance
 
 
 class CustomLoginSerializer(TokenObtainPairSerializer):

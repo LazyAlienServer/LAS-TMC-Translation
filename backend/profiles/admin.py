@@ -13,7 +13,7 @@ class ProfileAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('username', 'google_id')}),
+        ('Personal info', {'fields': ('username', 'avatar', 'google_id')}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),

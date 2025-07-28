@@ -7,10 +7,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import (
     ProfileSerializer,
     RegisterSerializer,
-#    UpdateProfileSerializer,
     CustomLoginSerializer,
     CustomLoginRefreshSerializer,
-
+    UsernameUpdateSerializer,
 )
 
 
@@ -27,9 +26,14 @@ class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
 
 
-#class UpdateProfileView(UpdateAPIView):
-#    permission_classes = (IsAuthenticated)
-#    serializer_class = UpdateProfileSerializer
+class UsernameUpdateView(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UsernameUpdateSerializer
+
+
+class AvatarUpdateView(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProfileSerializer
 
 
 class CustomLoginView(TokenObtainPairView):
