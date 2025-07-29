@@ -79,7 +79,3 @@ async function handleLogin() {
     </router-link>
   </form>
 </template>
-
-<style scoped>
-
-</style>

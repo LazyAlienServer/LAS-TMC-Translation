@@ -6,38 +6,29 @@ from datetime import timedelta
 from .models import FELog
 
 
-@shared_task
-def clear_debug_logs(days=14):
+def delete_old_logs(level, days):
     cutoff = timezone.now() - timedelta(days=days)
 
-    debug_deleted, _ = FELog.objects.filter(
-        level__in=['debug'],
+    logs_deleted, _ = FELog.objects.filter(
+        level__in=[level],
         timestamp__lt=cutoff
     ).delete()
 
-    # Return the number of deleted debug logs
-    return debug_deleted
+    # Return the number of debug logs
+    return logs_deleted
+
+
+@shared_task
+def clear_debug_logs(days=14):
+    debug_deleted = delete_old_logs('info', days)
+    return {"status": "success", "message": f"{debug_deleted} old debug logs cleared"}
 
 
 def clear_info_logs(days=30):
-    cutoff = timezone.now() - timedelta(days=days)
-
-    info_deleted, _ = FELog.objects.filter(
-        level__in=['info'],
-        timestamp__lt=cutoff
-    ).delete()
-
-    # Return the number of deleted info logs
-    return info_deleted
+    info_deleted = delete_old_logs('info', days)
+    return {"status": "success", "message": f"{info_deleted} old info logs cleared"}
 
 
 def clear_warn_logs(days=90):
-    cutoff = timezone.now() - timedelta(days=days)
-
-    warn_deleted, _ = FELog.objects.filter(
-        level__in=['warn'],
-        timestamp__lt=cutoff
-    ).delete()
-
-    # Return the number of deleted warn logs
-    return warn_deleted
+    warn_deleted = delete_old_logs('warn', days)
+    return {"status": "success", "message": f"{warn_deleted} old warn logs cleared"}

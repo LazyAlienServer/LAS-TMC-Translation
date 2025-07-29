@@ -20,18 +20,13 @@ async function globalBeforeEach(to) {
     if ((to.name === "login" || to.name === "register") && isLoggedIn) {
         return { name: 'home' };
     }
-}
 
-async function globalAfterEach(to) {
     if (to.meta.title) {
         document.title = to.meta.title;
-    } else {
-        document.title = 'Lazy Alien Server';
     }
 }
 
 
 export {
     globalBeforeEach,
-    globalAfterEach,
 }

@@ -10,31 +10,37 @@ const routes = [
         path: '/',
         name: 'home',
         component: views.HomeView,
-        meta: {title: 'Home - LAS'},
+        meta: {title: 'Home'},
     },
     {
         path: '/contact-us',
         name: 'contact',
         component: views.ContactView,
-        meta: {title: 'Contact Us - LAS'},
+        meta: {title: 'Contact Us'},
     },
     {
         path: '/donate',
         name: 'donate',
         component: views.DonateView,
-        meta: {title: 'Donate - LAS'},
+        meta: {title: 'Donate'},
     },
     {
         path: '/login',
         name: 'login',
         component: views.LoginView,
-        meta: {title: 'Login - LAS'},
+        meta: {title: 'Login'},
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        component: views.LogoutView,
+        meta: {title: 'Logout'},
     },
     {
         path: '/register',
         name: 'register',
         component: views.RegisterView,
-        meta: {title: 'Register - LAS'},
+        meta: {title: 'Register'},
     },
     {
         path: '/profile',
@@ -42,20 +48,32 @@ const routes = [
         component: views.ProfileView,
         meta: {
             requiresAuth: true,
-            title: 'Profile - LAS',
+            title: 'Profile',
         },
     },
     {
         path: '/videos',
         name: 'videos',
         component: views.VideosView,
-        meta: {title: 'Videos - LAS'},
+        meta: {title: 'Videos'},
     },
     {
         path: '/cookie-policy',
         name: 'cookie',
         component: views.CookiePolicyView,
-        meta: {title: 'Cookie Policy - LAS'},
+        meta: {title: 'Cookie Policy'},
+    },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: views.SettingsView,
+        meta: {title: 'Settings'},
+    },
+    {
+      path: '/bookmarks',
+      name: 'bookmarks',
+      component: views.BookmarksView,
+      meta: {title: 'Bookmarks'},
     },
 ]
 
