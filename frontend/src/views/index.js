@@ -9,3 +9,4 @@ export { default as VideosView } from './VideosView.vue';
 export { default as CookiePolicyView } from './CookiePolicyView.vue';
 export { default as SettingsView } from './SettingsView.vue';
 export { default as BookmarksView } from './BookmarksView.vue';
+export { default as NotFoundView } from './NotFoundView.vue';

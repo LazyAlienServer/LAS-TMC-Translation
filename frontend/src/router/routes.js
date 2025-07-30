@@ -1,4 +1,4 @@
-import * as views from "@/views"
+import * as views from "@/views";
 /*
 Import all views in @/views.
 Be careful when using this import syntax in other files, as it import everything without explicit names.
@@ -74,6 +74,12 @@ const routes = [
       name: 'bookmarks',
       component: views.BookmarksView,
       meta: {title: 'Bookmarks'},
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        component: () => import("@/views/NotFoundView.vue"),
+        meta: {title: '404'},
     },
 ]
 

@@ -8,7 +8,7 @@ import {
 <template>
   <div class="flex flex-col min-h-screen font-sans text-[#111827]">
     <AppHeader />
-    <main class="flex-1 px-10 pt-30 custom-bg">
+    <main class="flex-1 pt-30 custom-bg">
       <router-view />
     </main>
     <AppFooter />

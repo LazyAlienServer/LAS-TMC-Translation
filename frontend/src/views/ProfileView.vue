@@ -3,7 +3,7 @@ import { UserInfoCard } from "@/components";
 </script>
 
 <template>
-  <div class="body-container">
+  <div class="row-body-container">
 
     <UserInfoCard />
 

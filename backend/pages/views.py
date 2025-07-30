@@ -6,6 +6,14 @@ from rest_framework.views import APIView
 
 from core.utils.youtube import CACHE_KEY
 
+from datetime import datetime
+
+
+def days_since_start(date="2023-03-17"):
+    now = datetime.now()
+    delta = now - datetime.strptime(date, "%Y-%m-%d")
+    return delta.days
+
 
 def fetch_youtube_cache():
     """Fetch cached YouTube data"""
@@ -26,20 +34,17 @@ class YoutubeSnapshotView(APIView):
         data = fetch_youtube_cache()
 
         if data:
-            title = data["snippet"]["title"]
-            description = data["snippet"]["description"]
             thumbnail_url = data["snippet"]["thumbnails"]["high"]["url"]
             subscriber_count = data["statistics"]["subscriberCount"]
             video_count = data["statistics"]["videoCount"]
             view_count = data["statistics"]["viewCount"]
 
             return Response({
-                "title": title,
-                "description": description,
                 "thumbnail_url": thumbnail_url,
                 "subscriber_count": subscriber_count,
                 "video_count": video_count,
                 "view_count": view_count,
+                "since": days_since_start(),
             })
         else:
             return Response({"error": "No data found in cache"})

@@ -3,7 +3,7 @@ import { LoginForm } from "@/components";
 </script>
 
 <template>
-  <div class="body-container">
+  <div class="col-body-container">
     <LoginForm />
   </div>
 </template>

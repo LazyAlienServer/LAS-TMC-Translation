@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="body-container">
+  <div class="col-body-container">
     Donate to us
   </div>
 </template>

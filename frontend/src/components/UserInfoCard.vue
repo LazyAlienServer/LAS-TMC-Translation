@@ -9,13 +9,13 @@ const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.u
 </script>
 
 <template>
-  <div v-if="userInfo" class="flex flex-col gap-y-6 self-center items-center">
+  <div v-if="userInfo" class="flex flex-col gap-y-6 self-center items-center border border-gray-500 w-100 h-150 rounded-[20px]">
 
     <div>
       <img
           :src="avatarUrl"
           alt="User Avatar"
-          class="w-24 h-24 rounded-full object-cover border border-gray-300"
+          class="w-50 h-50 rounded-full object-cover border border-gray-300"
       />
     </div>
 

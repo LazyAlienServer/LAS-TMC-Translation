@@ -14,13 +14,22 @@
 /* Custom Components */
 @layer components {
     .link {
-        @apply font-bold hover:text-[#3B82F6] transition-colors duration-200;
+        @apply text-[14px] hover:text-[#3B82F6] transition-colors duration-200;
     }
-    .body-container {
-        @apply flex flex-col gap-y-6;
+    .col-body-container {
+        @apply flex flex-col gap-y-6 px-15;
+    }
+    .row-body-container {
+        @apply flex flex-row gap-y-6 px-15;
     }
     .header-sidebar-link {
         @apply flex flex-row gap-2 py-1 pl-2 rounded-md text-[15px] hover:cursor-pointer hover:bg-gray-200;
+    }
+    .hero-card {
+        @apply flex flex-col rounded-md border shadow-md border-gray-400 p-6 gap-y-2 items-center w-43;
+    }
+    .header-icon {
+        @apply rounded-lg p-2 hover:cursor-pointer hover:bg-gray-200;
     }
 }
 
