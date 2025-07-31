@@ -15,6 +15,20 @@ function loginUser(email, password) {
     });
 }
 
+function uploadAvatar(file) {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return api.patch('/user/update_avatar/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+}
+
+function updateUsername(name) {
+    return api.patch('/user/update_username/', {
+        username: name,
+    })
+}
+
 function getUserProfile() {
     return api.get('/user/profile/', {});
 }
@@ -28,6 +42,8 @@ function refreshUserLoginToken(refreshToken) {
 export {
     registerUser,
     loginUser,
+    uploadAvatar,
+    updateUsername,
     getUserProfile,
     refreshUserLoginToken,
 }

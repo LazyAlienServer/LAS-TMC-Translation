@@ -15,7 +15,7 @@ function toggleSidebar() {
 
 <template>
   <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md custom-bg">
-    <div class="flex flex-row items-center gap-8">
+    <div class="flex flex-row items-center gap-9">
       <router-link :to="{ name: 'home' }">
         <img src="@/assets/logo.svg" alt="logo" class="w-auto h-10" />
       </router-link>
@@ -39,7 +39,7 @@ function toggleSidebar() {
           v-if="userInfo"
           :src="avatarUrl"
           alt="User Avatar"
-          class="w-10 h-10 rounded-full object-cover border-2 border-gray-400 ml-4"
+          class="w-10 h-10 rounded-full object-cover ml-4 border border-gray-300"
           @click="toggleSidebar"
       />
 
@@ -56,7 +56,7 @@ function toggleSidebar() {
     <!-- Mask -->
     <div
         v-if="isSidebarOpen"
-        class="fixed inset-0 z-40 bg-gray-100 opacity-50"
+        class="fixed inset-0 z-40 bg-gray-200 opacity-50"
         @click="toggleSidebar"
     >
     </div>
@@ -72,12 +72,12 @@ function toggleSidebar() {
           <img src="@/assets/icons/x-16.svg" alt="logo" />
         </div>
 
-        <div class="flex flex-col gap-5 p-6">
-          <div class="flex flex-row items-center gap-2">
+        <div class="flex flex-col gap-4 p-6">
+          <div class="flex flex-row items-center gap-3">
             <img
                 :src="avatarUrl"
                 alt="User Avatar"
-                class="w-10 h-10 rounded-full object-cover border-2 border-gray-400"
+                class="w-10 h-10 rounded-full object-cover border border-gray-300"
             />
             <p
                 class="text-[15px] font-bold"

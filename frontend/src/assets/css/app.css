@@ -51,10 +51,10 @@
         @apply w-full flex flex-col max-w-sm bg-white p-8 rounded-lg shadow-md space-y-6 border border-gray-200 self-center
     }
     button {
-        @apply w-30 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-colors self-center
+        @apply text-[13px] py-1.5 bg-green-600 hover:bg-green-700 w-17 rounded-md font-semibold self-center text-white
     }
     input {
-        @apply w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400
+        @apply w-40 h-8 self-center border-x-0 border-t-0 border-b-1 outline-none
     }
     hr {
         @apply border-t border-gray-300

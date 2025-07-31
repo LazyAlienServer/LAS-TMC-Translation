@@ -3,13 +3,14 @@ from rest_framework import serializers
 
 class FileSizeValidator():
     def __init__(self, max_size_mb):
-        self.max_size_mb = max_size_mb
+        self.max_size_mb = max_size_mb * 1024 * 1024
+        self.max_size_mb_display = max_size_mb
 
     def __call__(self, value):
         size = getattr(value, 'size', 0)
 
         if size > self.max_size_mb:
-            message = f"The file uploaded must be less than {self.max_size_mb} MB"
+            message = f"The file uploaded must be less than {self.max_size_mb_display} MB"
             raise serializers.ValidationError(message)
 
 

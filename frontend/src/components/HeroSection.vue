@@ -31,7 +31,7 @@ onUnmounted(() => {
     <div class="flex flex-col items-start pl-15 pt-8">
       <h1 class="text-[57px]">LAS Technical Minecraft<br>Translation Team</h1>
       <br>
-      <p class="text-[32px]">Build a bridge between Minecraft communities.</p>
+      <p class="text-[32px]">A bridge between Minecraft communities.</p>
 
       <div class="flex flex-row items-start gap-6 my-8">
 

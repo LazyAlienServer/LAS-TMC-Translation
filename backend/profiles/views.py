@@ -10,7 +10,10 @@ from .serializers import (
     CustomLoginSerializer,
     CustomLoginRefreshSerializer,
     UsernameUpdateSerializer,
+    AvatarUpdateSerializer,
 )
+
+from .models import Profile
 
 
 class ProfileView(APIView):
@@ -30,10 +33,25 @@ class UsernameUpdateView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UsernameUpdateSerializer
 
+    def get_queryset(self):
+        # Don't really need this
+        return Profile.objects.filter(pk=self.request.user.pk)
+
+    def get_object(self):
+        return self.request.user
+
 
 class AvatarUpdateView(UpdateAPIView):
+
     permission_classes = (IsAuthenticated,)
-    serializer_class = ProfileSerializer
+    serializer_class = AvatarUpdateSerializer
+
+    def get_queryset(self):
+        # Don't really need this
+        return Profile.objects.filter(pk=self.request.user.pk)
+
+    def get_object(self):
+        return self.request.user
 
 
 class CustomLoginView(TokenObtainPairView):
