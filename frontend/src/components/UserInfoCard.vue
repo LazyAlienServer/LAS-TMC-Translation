@@ -2,7 +2,9 @@
 import { ref, computed } from "vue";
 import { useUserStore } from "@/stores";
 import { uploadAvatar, updateUsername } from "@/api";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo.avatar)
@@ -20,39 +22,42 @@ async function handleFile(event) {
   if (!file) return;
 
   try {
-    await uploadAvatar(file)
-    await userStore.loadUserInfo()
+    await uploadAvatar(file);
+    await userStore.loadUserInfo();
+    toast.success('Avatar updated successfully!');
 
   } catch (error) {
-    console.error('Avatar upload failed:', error);
+    const msg = error.response?.data?.toast_error
+    toast.error(msg);
+    console.error('Avatar update failed:', error);
   }
 }
 
 // Edit Username
 const isInputOpen = ref(false);
-const loading = ref(false);
 const newUsername = ref("");
-const error = ref("");
+const loading = ref(false);
 
 function toggleInput() {
   isInputOpen.value = !isInputOpen.value;
 }
 
 async function handleUsernameUpdate() {
-  // Handle Login Request
-  error.value = '';
-  loading.value = true
+  loading.value = true;
 
   try {
     await updateUsername(newUsername.value)
+    toast.success('Username updated successfully!');
     await userStore.loadUserInfo()
-    toggleInput()
 
   } catch (error) {
+    const msg = error.response?.data?.toast_error
+    toast.error(msg);
     console.error('Update username failed', error)
 
   } finally {
-    loading.value = false
+    toggleInput()
+    loading.value = false;
   }
 }
 </script>
@@ -92,7 +97,7 @@ async function handleUsernameUpdate() {
       <input
           v-model="newUsername"
           type="text"
-          placeholder="          Username"
+          placeholder="        New Username"
       />
 
       <div class="flex flex-row items-center gap-3">

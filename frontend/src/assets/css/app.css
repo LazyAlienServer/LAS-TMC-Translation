@@ -54,7 +54,7 @@
         @apply text-[13px] py-1.5 bg-green-600 hover:bg-green-700 w-17 rounded-md font-semibold self-center text-white
     }
     input {
-        @apply w-40 h-8 self-center border-x-0 border-t-0 border-b-1 outline-none
+        @apply w-auto h-8 self-center border-x-0 border-t-0 border-b-1 outline-none
     }
     hr {
         @apply border-t border-gray-300

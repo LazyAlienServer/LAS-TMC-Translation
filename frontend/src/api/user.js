@@ -1,10 +1,11 @@
 import api from './axiosInstance'
 
 
-function registerUser(email, password) {
+function registerUser(email, password, confirmPassword) {
     return api.post('/user/register/', {
         email: email,
         password: password,
+        confirm_password: confirmPassword
     });
 }
 

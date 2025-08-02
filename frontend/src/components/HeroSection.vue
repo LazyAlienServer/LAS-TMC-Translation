@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { getChannelSnapshot } from "@/api";
+import { extractErrorMessage } from "@/utils";
+
 
 const snapshot = ref({})
 let intervalId = null
@@ -11,7 +13,7 @@ async function loadSnapshot() {
     snapshot.value = response.data
     console.log("Fetch channel snapshot successfully")
   } catch (error) {
-    console.warn('Failed to fetch channel snapshot:', error)
+    console.warn('Failed to fetch channel snapshot:', extractErrorMessage(error))
   }
 }
 

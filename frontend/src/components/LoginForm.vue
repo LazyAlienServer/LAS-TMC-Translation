@@ -2,41 +2,32 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores';
-import { logger, extractErrorMessage } from '@/utils';
+import { useToast } from "vue-toastification";
 
-
+const toast = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
-const error = ref('');  /* the error message to user */
 
 async function handleLogin() {
-  // Handle Login Request
-  error.value = '';
   loading.value = true;
 
   try {
     await userStore.login(email.value, password.value);
-
-    logger.info('User logged in successfully');
-
     await router.push({ name: 'home' });
 
   } catch (error) {
-    const error_msg = extractErrorMessage(error);
-
-    logger.error('User login failed', {
-      error: error_msg,
-    });
-
-    error.value = 'Login failed. Please try again';
+    const msg = error.response?.data?.toast_error
+    toast.error(msg);
+    console.error("Login failed", error);
 
   } finally {
     loading.value = false;
   }
+
 }
 </script>
 
@@ -64,15 +55,8 @@ async function handleLogin() {
       />
     </div>
 
-    <div v-if="error" class="text-red-500 text-sm text-center">
-      {{ error }}
-    </div>
-
-    <button
-        type="submit"
-        :disabled="loading"
-    >
-      {{ loading ? "Logging in..." : "Login" }}
+    <button type="submit" :disabled="loading">
+      Sign in
     </button>
     <router-link :to="{ name: 'register' }" class="link">
       Do not have an account? Register here

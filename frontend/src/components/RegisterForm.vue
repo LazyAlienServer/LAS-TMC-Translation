@@ -2,54 +2,28 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { registerUser } from '@/api'
-import { logger, extractErrorMessage } from '@/utils';
-
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const loading = ref(false);
-const error = ref('');  /* the error message to user */
-
-function isValidEmail(value) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(value);
-}
 
 async function handleRegister() {
-  // Handle Register Request
-  error.value = '';
   loading.value = true;
 
-  if (!isValidEmail(email.value)) {
-    error.value = 'Please enter a valid email';
-    loading.value = false;
-    return;
-  }
-
-  if (password.value !== confirmPassword.value) {
-    error.value = 'Passwords do not match';
-    loading.value = false;
-    return;
-  }
-
   try {
-    await registerUser(email.value, password.value);
-
-    logger.info('User registered successfully');
-
+    await registerUser(email.value, password.value, confirmPassword.value);
+    toast.success('Successfully signed up!');
     await router.push({ name: 'login' });
 
   } catch (error) {
-    const error_msg = extractErrorMessage(error);
-
-    logger.error('User registered failed', {
-      error: error_msg,
-    });
-
-    error.value = 'Register failed. Please try again';
+    const msg = error.response.data.toast_error
+    toast.error(msg)
+    console.error("Register failed, ", error)
 
   } finally {
     loading.value = false;
@@ -83,6 +57,11 @@ async function handleRegister() {
       />
     </div>
 
+    <p class="text-[12px]">Your password must contain at least 8 characters.</p>
+    <p class="text-[12px]">Your password can’t be entirely numeric.</p>
+    <p class="text-[12px]">Your password can’t be a commonly used password.</p>
+    <p class="text-[12px]">Your password can’t be too similar to your other personal information.</p>
+
     <div>
       <label for="confirmPassword" class="block mb-1 font-medium">Confirm Password</label>
       <input
@@ -94,17 +73,12 @@ async function handleRegister() {
       />
     </div>
 
-    <div v-if="error" class="text-red-500 text-sm text-center">
-      {{ error }}
-    </div>
-
-    <button
-        type="submit"
-        :disabled="loading"
-    >
-      {{ loading ? "Signing up..." : "Sign up" }}
+    <button type="submit" :disabled="loading">
+      Sign up
     </button>
+
   </form>
+
 </template>
 
 <style scoped>

@@ -12,7 +12,7 @@ class FlexibleDateTimeField(serializers.DateTimeField):
     - 支持 +00:00 时区偏移
     - 支持无毫秒/无时区的时间
 
-    来自ChatGPT -4o
+    爱来自ChatGPT-4o
     """
     def to_internal_value(self, value):
         # 如果本身是 datetime，直接返回

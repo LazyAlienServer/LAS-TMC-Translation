@@ -66,7 +66,7 @@ function toggleSidebar() {
         class="fixed top-0 right-0 z-50 h-full w-80 rounded-l-3xl bg-white shadow-lg transform transition-transform duration-300"
         :class="isSidebarOpen ? 'translate-x-0' : 'translate-x-full'"
     >
-      <!-- If user has login -->
+      <!-- If user has signed in -->
       <div v-if="userInfo">
         <div class="absolute top-0 right-0 mt-8 mr-9 p-1 rounded-md hover:cursor-pointer hover:bg-gray-200 " @click="toggleSidebar">
           <img src="@/assets/icons/x-16.svg" alt="logo" />
@@ -115,7 +115,7 @@ function toggleSidebar() {
         </div>
       </div>
 
-      <!--If user has not login-->
+      <!-- If user has not signed in -->
       <div v-else>
         <div class="flex flex-col gap-5 p-6">
           <div class="flex flex-row items-center gap-2">
@@ -133,6 +133,10 @@ function toggleSidebar() {
               <router-link to="/login" class="header-sidebar-link" @click="toggleSidebar">
                 <img src="@/assets/icons/sign-in-16.svg" alt="logo" />
                 Sign In
+              </router-link>
+              <router-link to="/register" class="header-sidebar-link" @click="toggleSidebar">
+                <img src="@/assets/icons/rocket-16.svg" alt="logo" />
+                Sign up
               </router-link>
             </li>
           </ul>

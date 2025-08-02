@@ -55,26 +55,19 @@ const useUserStore = defineStore('user', () => {
 
     /* actions */
     async function login(email, password) {
+        const response = await loginUser(email, password);
+
+        setToken(response.data.access, response.data.refresh, parseInt(response.data.refresh_token_lifetime));
+        isLoggedIn.value = true;
+        console.log("logged in")
+
         try {
-            const response = await loginUser(email, password);
-
-            setToken(response.data.access, response.data.refresh, parseInt(response.data.refresh_token_lifetime));
-
-            isLoggedIn.value = true;
-
-            try {
-                await loadUserInfo();
-            } catch (error) {
-                console.warn(error);
-            }
-
-            scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
-            return true;
-
+            await loadUserInfo();
         } catch (error) {
-            console.log("Login failed: ", error);
-            return false;
+            console.warn(error);
         }
+
+        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
     }
 
     function logout() {
@@ -133,8 +126,14 @@ const useUserStore = defineStore('user', () => {
             try {
                 await loadUserInfo();
             } catch (error) {
-                console.warn(error);
-                logout();
+                console.warn("Access token is invalid, trying to refresh...");
+                try {
+                    await refreshAccessToken();
+                    await loadUserInfo();
+                } catch (error) {
+                    console.error("Refresh failed, logging out.");
+                    logout();
+                }
             }
         }
     }

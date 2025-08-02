@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.core.files.base import ContentFile
 
@@ -14,7 +13,7 @@ import io
 from PIL import Image
 
 from .models import Profile
-from core.utils.drf_validators import FileSizeValidator, FileTypeValidator
+from core.utils.validators import FileSizeValidator, FileTypeValidator, PasswordValidator, UsernameLengthValidator
 
 
 User = get_user_model()
@@ -43,13 +42,23 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=Profile.objects.all(), message="The email has already existed")],
+    )
+    password = serializers.CharField(write_only=True, required=True, validators=[PasswordValidator,])
+    confirm_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = Profile
-        fields = ('avatar', 'username', 'email', 'password')
+        fields = ('avatar', 'username', 'email', 'password', 'confirm_password',)
         read_only_fields = ('avatar', 'username',)
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match")
+
+        return data
 
     def create(self, validated_data):
         user = User(
@@ -67,7 +76,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UsernameUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=100,
-        validators=[UniqueValidator(queryset=Profile.objects.all())]
+        validators=[
+            UniqueValidator(queryset=Profile.objects.all(), message='The username has already existed',),
+            UsernameLengthValidator(max_length=10)
+        ]
     )
 
     class Meta:
@@ -78,8 +90,8 @@ class UsernameUpdateSerializer(serializers.ModelSerializer):
 class AvatarUpdateSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(
         validators=[
-            FileSizeValidator(max_size_mb=2),
-            FileTypeValidator
+            FileSizeValidator(object_display_name="avatar", max_size_mb=2),
+            FileTypeValidator(object_display_name="avatar")
         ]
     )
 
