@@ -33,33 +33,44 @@ async function handleLogin() {
 
 <template>
   <form @submit.prevent="handleLogin">
-    <h2 class="text-2xl font-bold text-center">Login</h2>
+    <h2 class="text-2xl font-bold text-center">Sign In</h2>
 
     <div>
-      <label for="email" class="block mb-1 font-medium">Email</label>
+      <div class="flex flex-row items-center gap-2">
+        <img src="@/assets/icons/mail-16.svg" alt="email" class="mb-1"/>
+        <label for="email" class="block mb-1 font-medium">Email</label>
+      </div>
       <input
           v-model="email"
           id="email"
           type="email"
           required
+          class="login-register-input"
       />
     </div>
 
     <div>
-      <label for="password" class="block mb-1 font-medium">Password</label>
+      <div class="flex flex-row items-center gap-2">
+        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <label for="password" class="block mb-1 font-medium">Password</label>
+      </div>
       <input
           v-model="password"
           id="password"
           type="password"
           required
+          class="login-register-input"
       />
     </div>
 
     <button type="submit" :disabled="loading">
       Sign in
     </button>
+
     <router-link :to="{ name: 'register' }" class="link">
-      Do not have an account? Register here
+      Do not have an account? Sign up here
     </router-link>
+
   </form>
+
 </template>

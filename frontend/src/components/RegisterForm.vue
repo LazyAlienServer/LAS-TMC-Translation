@@ -33,49 +33,68 @@ async function handleRegister() {
 
 <template>
   <form @submit.prevent="handleRegister">
-    <h2 class="text-2xl font-bold text-center">Register</h2>
+    <h2 class="text-2xl font-bold text-center">Sign Up</h2>
 
     <div>
-      <label for="email" class="block mb-1 font-medium">Email</label>
+      <div class="flex flex-row items-center gap-2">
+        <img src="@/assets/icons/mail-16.svg" alt="email" class="mb-1"/>
+        <label for="email" class="block mb-1 font-medium">Email</label>
+      </div>
       <input
           v-model="email"
           id="email"
           type="email"
           required
           autocomplete="off"
+          class="login-register-input"
       />
     </div>
 
     <div>
-      <label for="password" class="block mb-1 font-medium">Password</label>
+      <div class="flex flex-row items-center gap-2">
+        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <label for="password" class="block mb-1 font-medium">Password</label>
+      </div>
       <input
           v-model="password"
           id="password"
           type="password"
           required
           autocomplete="new-password"
+          class="login-register-input"
       />
     </div>
 
-    <p class="text-[12px]">Your password must contain at least 8 characters.</p>
-    <p class="text-[12px]">Your password can’t be entirely numeric.</p>
-    <p class="text-[12px]">Your password can’t be a commonly used password.</p>
-    <p class="text-[12px]">Your password can’t be too similar to your other personal information.</p>
-
     <div>
-      <label for="confirmPassword" class="block mb-1 font-medium">Confirm Password</label>
+      <div class="flex flex-row items-center gap-2">
+        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <label for="confirmPassword" class="block mb-1 font-medium">Confirm Password</label>
+      </div>
       <input
           v-model="confirmPassword"
           id="confirmPassword"
           type="password"
           required
           autocomplete="new-password"
+          class="login-register-input"
       />
+    </div>
+
+    <div class="flex flex-col items-start gap-1">
+      <p class="text-[12px]">Your password:</p>
+      <p class="text-[12px]">- must contain at least 8 characters.</p>
+      <p class="text-[12px]">- can’t be entirely numeric.</p>
+      <p class="text-[12px]">- can’t be a commonly used password.</p>
+      <p class="text-[12px]">- can’t be too similar to your other personal information.</p>
     </div>
 
     <button type="submit" :disabled="loading">
       Sign up
     </button>
+
+    <router-link :to="{ name: 'login' }" class="link">
+      Already had an account? Sign in here
+    </router-link>
 
   </form>
 

@@ -98,6 +98,7 @@ async function handleUsernameUpdate() {
           v-model="newUsername"
           type="text"
           placeholder="        New Username"
+          class="username-input"
       />
 
       <div class="flex flex-row items-center gap-3">
