@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { registerUser } from '@/api'
 import { useToast } from "vue-toastification";
+import { MailIcon, KeyIcon } from "@/assets/icons"
 
 const router = useRouter();
 const toast = useToast();
@@ -32,12 +33,12 @@ async function handleRegister() {
 </script>
 
 <template>
-  <form @submit.prevent="handleRegister">
+  <form @submit.prevent="handleRegister" class="backgrounds-auto">
     <h2 class="text-2xl font-bold text-center">Sign Up</h2>
 
     <div>
       <div class="flex flex-row items-center gap-2">
-        <img src="@/assets/icons/mail-16.svg" alt="email" class="mb-1"/>
+        <MailIcon class="login-register-icon" />
         <label for="email" class="block mb-1 font-medium">Email</label>
       </div>
       <input
@@ -52,7 +53,7 @@ async function handleRegister() {
 
     <div>
       <div class="flex flex-row items-center gap-2">
-        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <KeyIcon class="login-register-icon" />
         <label for="password" class="block mb-1 font-medium">Password</label>
       </div>
       <input
@@ -67,7 +68,7 @@ async function handleRegister() {
 
     <div>
       <div class="flex flex-row items-center gap-2">
-        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <KeyIcon class="login-register-icon" />
         <label for="confirmPassword" class="block mb-1 font-medium">Confirm Password</label>
       </div>
       <input
@@ -82,7 +83,7 @@ async function handleRegister() {
 
     <div class="flex flex-col items-start gap-1">
       <p class="text-[12px]">Your password:</p>
-      <p class="text-[12px]">- must contain at least 8 characters.</p>
+      <p class="text-[12px]">- can't be less than 8 characters.</p>
       <p class="text-[12px]">- can’t be entirely numeric.</p>
       <p class="text-[12px]">- can’t be a commonly used password.</p>
       <p class="text-[12px]">- can’t be too similar to your other personal information.</p>

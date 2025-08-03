@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores';
 import { useToast } from "vue-toastification";
+import { MailIcon, KeyIcon } from "@/assets/icons"
 
 const toast = useToast();
 const router = useRouter();
@@ -32,12 +33,12 @@ async function handleLogin() {
 </script>
 
 <template>
-  <form @submit.prevent="handleLogin">
+  <form @submit.prevent="handleLogin" class="backgrounds-auto">
     <h2 class="text-2xl font-bold text-center">Sign In</h2>
 
     <div>
       <div class="flex flex-row items-center gap-2">
-        <img src="@/assets/icons/mail-16.svg" alt="email" class="mb-1"/>
+        <MailIcon class="login-register-icon" />
         <label for="email" class="block mb-1 font-medium">Email</label>
       </div>
       <input
@@ -51,7 +52,7 @@ async function handleLogin() {
 
     <div>
       <div class="flex flex-row items-center gap-2">
-        <img src="@/assets/icons/shield-lock-16.svg" alt="email" class="mb-1"/>
+        <KeyIcon class="login-register-icon" />
         <label for="password" class="block mb-1 font-medium">Password</label>
       </div>
       <input

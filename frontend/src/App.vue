@@ -1,14 +1,11 @@
 <script setup>
-import {
-  AppHeader,
-  AppFooter,
-} from "@/components";
+import { AppHeader, AppFooter } from "@/components";
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen font-sans text-[#111827]">
+  <div class="flex flex-col min-h-screen font-sans text-light dark:text-dark backgrounds-auto">
     <AppHeader />
-    <main class="flex-1 pt-30 custom-bg">
+    <main class="flex-1 pt-30">
       <router-view />
     </main>
     <AppFooter />

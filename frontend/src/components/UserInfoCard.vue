@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import { useUserStore } from "@/stores";
 import { uploadAvatar, updateUsername } from "@/api";
 import { useToast } from "vue-toastification";
+import { PencilIcon, PersonIcon, MailIcon } from "@/assets/icons"
 
 const toast = useToast();
 const userStore = useUserStore();
@@ -72,12 +73,11 @@ async function handleUsernameUpdate() {
           class="w-55 h-55 rounded-full object-cover border border-gray-300"
       />
 
-      <img
-          src="@/assets/icons/pencil-16.svg"
-          alt="edit"
+      <PencilIcon
           @click="triggerFileSelect"
-          class="absolute top-0 right-0 bg-white rounded-full p-1 shadow-md transform -translate-x-2 translate-y-2"
+          class="w-6 h-6 fill-current absolute top-0 right-0 rounded-full p-1 shadow-lg transform -translate-x-4 translate-y-4"
       />
+
       <input
           ref="fileInput"
           type="file"
@@ -118,7 +118,7 @@ async function handleUsernameUpdate() {
           @click="toggleInput"
       >
 
-        <img src="@/assets/icons/pencil-16.svg" alt="edit"/>
+        <PencilIcon class="w-4.5 h-4.5 fill-current"/>
         <p class="text-[16px]">Edit Your Username</p>
 
       </div>
@@ -127,12 +127,12 @@ async function handleUsernameUpdate() {
       <div class="flex flex-col pl-2 mt-2 gap-2">
 
         <div class="flex flex-row items-center gap-1">
-          <img src="@/assets/icons/person-16.svg" alt="id"/>
+          <PencilIcon class="w-4.5 h-4.5 fill-current"/>
           <p class="text-[16px]">ID: {{ userInfo.id }}</p>
         </div>
 
         <div class="flex flex-row items-center gap-1">
-          <img src="@/assets/icons/mail-16.svg" alt="email"/>
+          <MailIcon class="w-4.5 h-4.5 fill-current"/>
           <p class="text-[16px]">Email: {{ userInfo.email }}</p>
         </div>
 

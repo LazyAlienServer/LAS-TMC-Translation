@@ -27,7 +27,8 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "terser-webpack-plugin": "^5.3.14",
-    "vite-plugin-remove-console": "^2.2.0"
+    "vite-plugin-remove-console": "^2.2.0",
+    "vite-svg-loader": "^5.1.0"
   },
   "eslintConfig": {
     "root": true,

@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { getChannelSnapshot } from "@/api";
 import { extractErrorMessage } from "@/utils";
-
+import { WebsiteIcon } from "@/assets"
 
 const snapshot = ref({})
 let intervalId = null
@@ -60,6 +60,6 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <img src="@/assets/logo.svg" alt="Logo" class="self-center w-70 h-70" />
+    <WebsiteIcon class="w-70 h-70 fill-current"/>
   </div>
 </template>

@@ -1,14 +1,33 @@
 /*  Custom tailwind themes, utilities, components, variants and base styles  */
 @import 'tailwindcss';
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /* Custom Themes */
 @theme {
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 /* Custom Utilities */
-@utility custom-bg {
+@utility bg-light {
     background-color: #FAFAFA;
+}
+
+@utility bg-dark {
+    background-color: #1E1E1E;
+}
+
+
+@utility text-light {
+    color: #1E1E1E;
+}
+
+@utility text-dark {
+    color: #FAFAFA;
+}
+
+@utility no-select {
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
 }
 
 /* Custom Components */
@@ -23,13 +42,16 @@
         @apply flex flex-row gap-y-6 px-15;
     }
     .header-sidebar-link {
-        @apply flex flex-row gap-2 py-1 pl-2 rounded-md text-[15px] hover:cursor-pointer hover:bg-gray-200;
+        @apply flex flex-row gap-2 py-1 pl-2 rounded-md text-[15px] hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C];
+    }
+    .header-sidebar-icon {
+        @apply w-5 h-5 fill-current mt-0.5;
     }
     .hero-card {
         @apply flex flex-col rounded-md border shadow-md border-gray-400 p-6 gap-y-2 items-center w-43;
     }
     .header-icon {
-        @apply rounded-lg p-2 hover:cursor-pointer hover:bg-gray-200;
+        @apply rounded-lg p-2 hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C];
     }
     .username-input {
         @apply w-auto h-8 self-center border-x-0 border-t-0 border-b-1 outline-none
@@ -37,7 +59,12 @@
     .login-register-input {
         @apply w-full h-8 self-center border-x-0 border-t-0 border-b-1 outline-none;
     }
-
+    .login-register-icon {
+        @apply h-4.5 w-4.5 fill-current mb-1;
+    }
+    .backgrounds-auto {
+        @apply bg-light dark:bg-dark;
+    }
 }
 
 /* Custom Base styles */

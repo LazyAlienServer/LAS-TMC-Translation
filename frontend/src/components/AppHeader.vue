@@ -1,9 +1,24 @@
 <script setup>
 import { ref, computed } from "vue";
 import { RouterLink } from "vue-router";
-import { useUserStore } from "@/stores";
+import { useUserStore, useThemeStore } from "@/stores";
+import {
+    YouTubeBlackIcon,
+    GithubIcon,
+    SunIcon,
+    XIcon,
+    PersonIcon,
+    PersonIconLarge,
+    GearIcon,
+    BookmarkIcon,
+    SignInIcon,
+    SignOutIcon,
+    RocketIcon,
+} from "@/assets/icons";
+import { WebsiteIcon, LasLogo } from "@/assets";
 
 const userStore = useUserStore();
+const themeStore = useThemeStore();
 const userInfo = computed(() => userStore.userInfo);
 const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo.avatar)
 
@@ -11,29 +26,38 @@ const isSidebarOpen = ref(false);
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
 }
+
+function toggleTheme() {
+  themeStore.toggleTheme();
+}
+
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md custom-bg">
+  <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md custom-bg no-select">
     <div class="flex flex-row items-center gap-9">
       <router-link :to="{ name: 'home' }">
-        <img src="@/assets/logo.svg" alt="logo" class="w-auto h-10" />
+        <WebsiteIcon class="w-auto h-10"/>
       </router-link>
 
       <a href="https://lazyalienserver.top/" target="_blank" rel="noopener" class="w-13">
-        <img src="@/assets/las.svg" alt="logo" />
+        <LasLogo />
       </a>
     </div>
 
-    <div class="flex font-medium items-center justify-center gap-3">
+    <div class="flex font-medium items-center gap-3">
 
       <a href="https://www.youtube.com/@redstonevideotranslation5478" target="_blank" rel="noopener" class="header-icon">
-        <img src="@/assets/icons/youtube-black.svg" alt="logo" class="w-6 h-6" />
+        <YouTubeBlackIcon class="w-6 h-6 fill-current" />
       </a>
 
       <a href="https://github.com/LazyAlienServer" target="_blank" rel="noopener" class="header-icon">
-        <img src="@/assets/icons/mark-github-16.svg" alt="logo" class="w-6 h-6" />
+        <GithubIcon class="w-6 h-6 fill-current" />
       </a>
+
+      <div @click="toggleTheme" class="header-icon">
+        <SunIcon class="w-6 h-6 fill-current" />
+      </div>
 
       <img
           v-if="userInfo"
@@ -43,13 +67,9 @@ function toggleSidebar() {
           @click="toggleSidebar"
       />
 
-      <img
-          v-else
-          src="@/assets/icons/person-fill-16.svg"
-          alt="logo"
-          class="header-icon ml-4 w-10 h-10"
-          @click="toggleSidebar"
-      />
+      <div v-else class="header-icon">
+        <PersonIconLarge class="w-6 h-6 fill-current" @click="toggleSidebar" />
+      </div>
 
     </div>
 
@@ -63,13 +83,13 @@ function toggleSidebar() {
 
     <!-- Side Bar -->
     <div
-        class="fixed top-0 right-0 z-50 h-full w-80 rounded-l-3xl bg-white shadow-lg transform transition-transform duration-300"
+        class="fixed top-0 right-0 z-50 h-full w-80 rounded-l-3xl shadow-lg transform transition-transform duration-300 backgrounds-auto"
         :class="isSidebarOpen ? 'translate-x-0' : 'translate-x-full'"
     >
       <!-- If user has signed in -->
       <div v-if="userInfo">
-        <div class="absolute top-0 right-0 mt-8 mr-9 p-1 rounded-md hover:cursor-pointer hover:bg-gray-200 " @click="toggleSidebar">
-          <img src="@/assets/icons/x-16.svg" alt="logo" />
+        <div class="absolute top-0 right-0 mt-8 mr-9 p-1 rounded-md hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C]" @click="toggleSidebar">
+          <XIcon class="header-sidebar-icon"/>
         </div>
 
         <div class="flex flex-col gap-4 p-6">
@@ -90,15 +110,15 @@ function toggleSidebar() {
           <ul class="space-y-3">
             <li>
               <router-link to="/profile" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/person-16.svg" alt="logo" />
+                <PersonIcon class="header-sidebar-icon" />
                 Your Profile
               </router-link>
               <router-link to="/settings" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/gear-16.svg" alt="logo" />
+                <GearIcon class="header-sidebar-icon" />
                 Your Settings
               </router-link>
               <router-link to="/bookmarks" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/bookmark-16.svg" alt="logo" />
+                <BookmarkIcon class="header-sidebar-icon" />
                 Your Bookmarks
               </router-link>
             </li>
@@ -107,7 +127,7 @@ function toggleSidebar() {
 
             <li>
               <router-link to="/logout" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/sign-out-16.svg" alt="logo" />
+                <SignOutIcon class="header-sidebar-icon" />
                 Sign Out
               </router-link>
             </li>
@@ -119,10 +139,7 @@ function toggleSidebar() {
       <div v-else>
         <div class="flex flex-col gap-5 p-6">
           <div class="flex flex-row items-center gap-2">
-            <img
-                src="@/assets/icons/person-fill-24.svg"
-                alt="Anonymous User Logo"
-            />
+            <PersonIconLarge class="w-8 h-8 fill-current" />
             <p class="text-[15px] font-bold">Anonymous User</p>
           </div>
 
@@ -131,11 +148,11 @@ function toggleSidebar() {
           <ul class="space-y-3">
             <li>
               <router-link to="/login" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/sign-in-16.svg" alt="logo" />
+                <SignInIcon class="header-sidebar-icon" />
                 Sign In
               </router-link>
               <router-link to="/register" class="header-sidebar-link" @click="toggleSidebar">
-                <img src="@/assets/icons/rocket-16.svg" alt="logo" />
+                <RocketIcon class="header-sidebar-icon" />
                 Sign up
               </router-link>
             </li>
