@@ -5,7 +5,7 @@ import { AppHeader, AppFooter } from "@/components";
 <template>
   <div class="flex flex-col min-h-screen font-sans text-light dark:text-dark backgrounds-auto">
     <AppHeader />
-    <main class="flex-1 pt-30">
+    <main class="flex-1 pt-25">
       <router-view />
     </main>
     <AppFooter />

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-20 flex flex-col gap-y-6">
+  <div class="px-20 pt-5 flex flex-col gap-y-6">
     <h1>Our Cookie Policy</h1>
     <p>Last updated: July 2025</p>
     <p>

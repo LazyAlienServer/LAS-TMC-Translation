@@ -32,20 +32,26 @@
 
 /* Custom Components */
 @layer components {
+    .backgrounds-auto {
+        @apply bg-light dark:bg-dark;
+    }
+    .hover-auto {
+        @apply hover:bg-gray-200 dark:hover:bg-[#2C2C2C];
+    }
     .link {
         @apply text-[14px] hover:text-[#3B82F6] transition-colors duration-200 hover:underline;
     }
     .col-body-container {
-        @apply flex flex-col gap-y-6 px-15;
+        @apply flex flex-col gap-y-6 px-22;
     }
     .row-body-container {
-        @apply flex flex-row gap-y-6 px-15;
+        @apply flex flex-row gap-y-6 px-22;
     }
-    .header-sidebar-link {
-        @apply flex flex-row gap-2 py-1 pl-2 rounded-md text-[15px] hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C];
+    .sidebar-link {
+        @apply flex flex-row gap-2 py-1.5 pl-2 rounded-md text-[15px] hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C];
     }
-    .header-sidebar-icon {
-        @apply w-5 h-5 fill-current mt-0.5;
+    .sidebar-icon {
+        @apply w-4.5 h-4.5 fill-current mt-[3.1px];
     }
     .hero-card {
         @apply flex flex-col rounded-md border shadow-md border-gray-400 p-6 gap-y-2 items-center w-43;
@@ -61,9 +67,6 @@
     }
     .login-register-icon {
         @apply h-4.5 w-4.5 fill-current mb-1;
-    }
-    .backgrounds-auto {
-        @apply bg-light dark:bg-dark;
     }
 }
 

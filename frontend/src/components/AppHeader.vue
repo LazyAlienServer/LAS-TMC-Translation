@@ -8,7 +8,7 @@ import {
     SunIcon,
     XIcon,
     PersonIcon,
-    PersonIconLarge,
+    PersonIconFillLarge,
     GearIcon,
     BookmarkIcon,
     SignInIcon,
@@ -68,7 +68,7 @@ function toggleTheme() {
       />
 
       <div v-else class="header-icon">
-        <PersonIconLarge class="w-6 h-6 fill-current" @click="toggleSidebar" />
+        <PersonIconFillLarge class="w-6 h-6 fill-current" @click="toggleSidebar" />
       </div>
 
     </div>
@@ -89,7 +89,7 @@ function toggleTheme() {
       <!-- If user has signed in -->
       <div v-if="userInfo">
         <div class="absolute top-0 right-0 mt-8 mr-9 p-1 rounded-md hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C]" @click="toggleSidebar">
-          <XIcon class="header-sidebar-icon"/>
+          <XIcon class="sidebar-icon"/>
         </div>
 
         <div class="flex flex-col gap-4 p-6">
@@ -107,27 +107,27 @@ function toggleTheme() {
 
           <hr>
 
-          <ul class="space-y-3">
+          <ul class="gap-y-3">
             <li>
-              <router-link to="/profile" class="header-sidebar-link" @click="toggleSidebar">
-                <PersonIcon class="header-sidebar-icon" />
+              <router-link to="/profile" class="sidebar-link" @click="toggleSidebar">
+                <PersonIcon class="sidebar-icon" />
                 Your Profile
               </router-link>
-              <router-link to="/settings" class="header-sidebar-link" @click="toggleSidebar">
-                <GearIcon class="header-sidebar-icon" />
+              <router-link to="/settings/appearance" class="sidebar-link" @click="toggleSidebar">
+                <GearIcon class="sidebar-icon" />
                 Your Settings
               </router-link>
-              <router-link to="/bookmarks" class="header-sidebar-link" @click="toggleSidebar">
-                <BookmarkIcon class="header-sidebar-icon" />
+              <router-link to="/bookmarks" class="sidebar-link" @click="toggleSidebar">
+                <BookmarkIcon class="sidebar-icon" />
                 Your Bookmarks
               </router-link>
             </li>
 
-            <hr>
+            <hr class="my-3">
 
             <li>
-              <router-link to="/logout" class="header-sidebar-link" @click="toggleSidebar">
-                <SignOutIcon class="header-sidebar-icon" />
+              <router-link to="/logout" class="sidebar-link" @click="toggleSidebar">
+                <SignOutIcon class="sidebar-icon" />
                 Sign Out
               </router-link>
             </li>
@@ -139,7 +139,7 @@ function toggleTheme() {
       <div v-else>
         <div class="flex flex-col gap-5 p-6">
           <div class="flex flex-row items-center gap-2">
-            <PersonIconLarge class="w-8 h-8 fill-current" />
+            <PersonIconFillLarge class="w-8 h-8 fill-current" />
             <p class="text-[15px] font-bold">Anonymous User</p>
           </div>
 
@@ -147,12 +147,12 @@ function toggleTheme() {
 
           <ul class="space-y-3">
             <li>
-              <router-link to="/login" class="header-sidebar-link" @click="toggleSidebar">
-                <SignInIcon class="header-sidebar-icon" />
+              <router-link to="/login" class="sidebar-link" @click="toggleSidebar">
+                <SignInIcon class="sidebar-icon" />
                 Sign In
               </router-link>
-              <router-link to="/register" class="header-sidebar-link" @click="toggleSidebar">
-                <RocketIcon class="header-sidebar-icon" />
+              <router-link to="/register" class="sidebar-link" @click="toggleSidebar">
+                <RocketIcon class="sidebar-icon" />
                 Sign up
               </router-link>
             </li>

@@ -7,6 +7,7 @@ export { default as RegisterView } from './RegisterView.vue';
 export { default as ProfileView } from './ProfileView.vue';
 export { default as VideosView } from './VideosView.vue';
 export { default as CookiePolicyView } from './CookiePolicyView.vue';
-export { default as SettingsView } from './SettingsView.vue';
+export { default as AppearanceSettingView } from './AppearanceSettingView.vue';
+export { default as LanguageSettingView } from './LanguageSettingView.vue';
 export { default as BookmarksView } from './BookmarksView.vue';
 export { default as NotFoundView } from './NotFoundView.vue';

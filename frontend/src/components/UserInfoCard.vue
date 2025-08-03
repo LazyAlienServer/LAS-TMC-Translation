@@ -64,7 +64,7 @@ async function handleUsernameUpdate() {
 </script>
 
 <template>
-  <div v-if="userInfo" class="flex flex-col gap-5 pl-3 pr-15 pt-3 h-auto mb-20">
+  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full">
     <div class="flex flex-col gap-y-7 items-center relative">
 
       <img
@@ -127,7 +127,7 @@ async function handleUsernameUpdate() {
       <div class="flex flex-col pl-2 mt-2 gap-2">
 
         <div class="flex flex-row items-center gap-1">
-          <PencilIcon class="w-4.5 h-4.5 fill-current"/>
+          <PersonIcon class="w-4.5 h-4.5 fill-current"/>
           <p class="text-[16px]">ID: {{ userInfo.id }}</p>
         </div>
 

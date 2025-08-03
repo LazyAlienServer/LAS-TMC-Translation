@@ -6,3 +6,5 @@ export { default as RegisterForm } from './RegisterForm.vue';
 export { default as LogoutCard } from './LogoutCard.vue';
 export { default as HeroSection } from './HeroSection.vue';
 export { default as CookiePolicy } from './CookiePolicy.vue';
+export { default as SettingSideBar } from './SettingSideBar.vue';
+export { default as ThemeSetting } from './ThemeSetting.vue';

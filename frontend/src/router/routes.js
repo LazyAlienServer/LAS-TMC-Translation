@@ -64,16 +64,31 @@ const routes = [
         meta: {title: 'Cookie Policy'},
     },
     {
-        path: '/settings',
-        name: 'settings',
-        component: views.SettingsView,
-        meta: {title: 'Settings'},
+        path: '/settings/appearance',
+        name: 'appearance',
+        component: views.AppearanceSettingView,
+        meta: {
+            requiresAuth: true,
+            title: 'Appearance',
+        },
+    },
+    {
+        path: '/settings/language',
+        name: 'language',
+        component: views.LanguageSettingView,
+        meta: {
+            requiresAuth: true,
+            title: 'Language',
+        },
     },
     {
       path: '/bookmarks',
       name: 'bookmarks',
       component: views.BookmarksView,
-      meta: {title: 'Bookmarks'},
+      meta: {
+          requiresAuth: true,
+          title: 'Bookmarks'
+      },
     },
     {
         path: '/:pathMatch(.*)*',
