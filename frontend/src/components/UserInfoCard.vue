@@ -28,8 +28,7 @@ async function handleFile(event) {
     toast.success('Avatar updated successfully!');
 
   } catch (error) {
-    const msg = error.response?.data?.toast_error
-    toast.error(msg);
+    toast.error(error.response?.data?.toast_error);
     console.error('Avatar update failed:', error);
   }
 }

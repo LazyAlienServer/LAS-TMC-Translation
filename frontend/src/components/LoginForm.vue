@@ -18,11 +18,11 @@ async function handleLogin() {
 
   try {
     await userStore.login(email.value, password.value);
+    toast.success("Sign in successful!");
     await router.push({ name: 'home' });
 
   } catch (error) {
-    const msg = error.response?.data?.toast_error
-    toast.error(msg);
+    toast.error(error.response?.data?.toast_error);
     console.error("Login failed", error);
 
   } finally {

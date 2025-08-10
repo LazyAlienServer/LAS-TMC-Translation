@@ -11,6 +11,7 @@ const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.u
 
 function onLogout() {
   handleLogout();
+  toast.success("Sign out successful!");
   router.push({name: "home"});
 }
 </script>
