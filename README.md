@@ -1,4 +1,4 @@
-# 项目开发文档（自用）
+# 项目开发文档
 
 ## 一、项目概述
 
@@ -95,10 +95,8 @@ make prodown   # 停止生产环境
 
 ## 五、开发注意事项
 
-1. **Makefile 变量与文件名保持一致**（已修正 prod/pro）
-2. **YouTube 配置来源优化**：`core/utils/youtube.py` 需改为从 `django.conf.settings` 获取 URL/Headers（当前直接 import base settings）
-3. **前端容器端口声明**：可在 Dockerfile 中 `EXPOSE 443` 与 nginx.conf 保持一致
-4. **部署前**：准备好 `.env` 文件（SECRET_KEY、DB、Redis、JWT、YouTube API Key）及 HTTPS 证书
+1. **YouTube 配置来源优化**：`core/utils/youtube.py` 需改为从 `django.conf.settings` 获取 URL/Headers（当前直接 import base settings）
+2. **部署前**：准备好 `.env` 文件（SECRET_KEY、DB、Redis、JWT、YouTube API Key）及 HTTPS 证书
 
 ## 六、下一步计划
 
