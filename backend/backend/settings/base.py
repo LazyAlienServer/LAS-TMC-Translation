@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "pages.apps.PagesConfig",
     "logs.apps.LogsConfig",
+    "articles.apps.ArticlesConfig",
+    "comments.apps.CommentsConfig",
     # 3rd-party Apps
     "rest_framework",
     "django_celery_beat",
@@ -48,8 +50,8 @@ DEFAULT_AVATARS = [
 ]
 
 YOUTUBE_API_KEY = env.str("YOUTUBE_API_KEY")
-YOUTUBE_CHANNEL_ID = "UCqFzvR6Atp0qBXiEzL3Bbvw"
-YOUTUBE_CHANNEL_HANDLE = "@redstonevideotranslation5478"
+YOUTUBE_CHANNEL_ID = env.str("YOUTUBE_CHANNEL_ID")
+YOUTUBE_CHANNEL_HANDLE = env.str("YOUTUBE_CHANNEL_HANDLE")
 YOUTUBE_API_URL = f"https://youtube.googleapis.com/youtube/v3/channels?part=snippet,statistics&id={YOUTUBE_CHANNEL_ID}&key={YOUTUBE_API_KEY}"
 YOUTUBE_REQUEST_HEADERS = {
     "Referer": "http://localhost:8000",
@@ -57,17 +59,25 @@ YOUTUBE_REQUEST_HEADERS = {
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ],
+
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+
     "EXCEPTION_HANDLER": "core.utils.exceptions.custom_exception_handler",
+
+    "DEFAULT_PAGINATION_CLASS": "core.utils.drf.pagination.StandardPagination",
+    "PAGE_SIZE": 20,
+
+    "DATETIME_FORMAT": "%Y-%m-%dT%H:%M:%S%z",
+    "DATE_FORMAT": "%Y-%m-%d",
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=env.int("ACCESS_TOKEN_LIFETIME", 15)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=env.int("REFRESH_TOKEN_LIFETIME", 30)),
 }
 
 MIDDLEWARE = [

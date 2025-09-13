@@ -1,10 +1,11 @@
 import Cookies from "js-cookie";
 
+const isProd = window.location.protocol === "https:";
 
 function setRefreshToken(token, expiresDays = 30) {
     Cookies.set("refreshToken", token, {
         expires: expiresDays,
-        secure: true,
+        secure: isProd,
     });
 }
 

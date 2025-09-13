@@ -3,8 +3,10 @@ import { computed } from "vue";
 import { useUserStore } from "@/stores";
 import { handleLogout } from "@/utils";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification"
 
 const userStore = useUserStore();
+const toast = useToast();
 const router = useRouter();
 const userInfo = computed(() => userStore.userInfo);
 const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo.avatar)

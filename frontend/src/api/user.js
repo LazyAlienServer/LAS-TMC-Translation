@@ -1,5 +1,5 @@
 import api from './axiosInstance'
-
+import axios from "axios"; // Import axios for bare refresh request (without the custom api wrapper)
 
 function registerUser(email, password, confirmPassword) {
     return api.post('/user/register/', {
@@ -31,13 +31,21 @@ function updateUsername(name) {
 }
 
 function getUserProfile() {
-    return api.get('/user/profile/', {});
+    return api.get('/user/profile/', { withCredentials: true });
 }
 
 function refreshUserLoginToken(refreshToken) {
-    return api.post('/user/refresh_login_token/', {
-        refresh: refreshToken,
-    });
+    return api.post(
+        '/user/refresh_login_token/',
+        { refresh: refreshToken });
+}
+
+function refreshUserLoginTokenBare(refreshToken) {
+    return axios.post(
+        '/user/refresh_login_token/',
+        { refresh: refreshToken },
+        { withCredentials: false },
+    );
 }
 
 export {
@@ -47,4 +55,5 @@ export {
     updateUsername,
     getUserProfile,
     refreshUserLoginToken,
+    refreshUserLoginTokenBare,
 }

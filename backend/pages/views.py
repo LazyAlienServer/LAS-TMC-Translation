@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from core.utils.youtube import CACHE_KEY
-
 from datetime import datetime
+
+from core.utils.cache import get_cache
 
 
 def days_since_start(date="2023-03-17"):
@@ -18,7 +18,7 @@ def days_since_start(date="2023-03-17"):
 def fetch_youtube_cache():
     """Fetch cached YouTube data"""
 
-    raw_data = cache.get(CACHE_KEY[0])
+    raw_data = get_cache("youtube_data", "channel_stats")
     data = raw_data["items"][0]
 
     return data

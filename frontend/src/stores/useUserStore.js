@@ -1,17 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import {
-    loginUser,
-    getUserProfile,
-    refreshUserLoginToken,
-    api,
-} from "@/api";
-import {
-    setRefreshToken,
-    getRefreshToken,
-    removeRefreshToken,
-} from "@/utils";
-
+import { loginUser, getUserProfile, refreshUserLoginToken, refreshUserLoginTokenBare, api } from "@/api";
+import { setRefreshToken, getRefreshToken, removeRefreshToken } from "@/utils";
 
 const useUserStore = defineStore('user', () => {
     /* states */
@@ -29,7 +19,7 @@ const useUserStore = defineStore('user', () => {
         const refreshDelay = (expiresInSeconds - 60) * 1000;
 
         refreshTimer = setTimeout(() => {
-            refreshAccessToken().catch((error) => {
+            refreshAccessTokenBare().catch((error) => {
                 console.warn(error);
             })
         }, refreshDelay);
@@ -95,6 +85,17 @@ const useUserStore = defineStore('user', () => {
             throw error;
         }
     }
+
+    function handleNewToken(response) {
+        accessToken.value = response.data.access;
+        localStorage.setItem("accessToken", accessToken.value);
+        api.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken.value;
+
+        isLoggedIn.value = true;
+
+        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
+    }
+
     async function refreshAccessToken() {
         const storedRefreshToken = getRefreshToken();
 
@@ -104,14 +105,22 @@ const useUserStore = defineStore('user', () => {
 
         try {
             const response = await refreshUserLoginToken(storedRefreshToken);
+            handleNewToken(response)
 
-            accessToken.value = response.data.access;
-            localStorage.setItem("accessToken", accessToken.value);
-            api.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken.value;
+        } catch(error) {
+            console.log("Refresh access token failed: ", error);
+            logout();
+        }
+    }
 
-            isLoggedIn.value = true;
+    // retry using bare axios request
+    async function refreshAccessTokenBare() {
+        const storedRefreshToken = getRefreshToken();
+        if (!storedRefreshToken) throw new Error('Refresh token is missing');
 
-            scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
+        try {
+            const response = await refreshUserLoginTokenBare(storedRefreshToken);
+            handleNewToken(response)
 
         } catch(error) {
             console.log("Refresh access token failed: ", error);
@@ -128,7 +137,7 @@ const useUserStore = defineStore('user', () => {
             } catch (error) {
                 console.warn("Access token is invalid, trying to refresh...");
                 try {
-                    await refreshAccessToken();
+                    await refreshAccessTokenBare();
                     await loadUserInfo();
                 } catch (error) {
                     console.error("Refresh failed, logging out.");
@@ -147,6 +156,7 @@ const useUserStore = defineStore('user', () => {
         logout,
         loadUserInfo,
         refreshAccessToken,
+        refreshAccessTokenBare,
         initializeUser,
     };
 });

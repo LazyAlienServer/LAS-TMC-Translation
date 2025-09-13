@@ -12,47 +12,39 @@ import random
 import io
 from PIL import Image
 
-from .models import Profile
-from core.utils.validators import FileSizeValidator, FileTypeValidator, PasswordValidator, UsernameLengthValidator
+from core.utils.drf.validators import (
+    FileSizeValidator,
+    FileTypeValidator,
+    PasswordValidator,
+    LengthValidator,
+    RequiredValidator,
+)
 
 
 User = get_user_model()
 
 
-def generate_unique_username():
-    for _ in range(1000):
-        uid = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-        username = f"user_{uid}"
-        if not Profile.objects.filter(username=username).exists():
-            return username
-    raise Exception("Unable to generate unique username")
-
-
-def pick_random_avatar():
-    avatar = random.choice(settings.DEFAULT_AVATARS)
-    return avatar
-
-
 class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Profile
-        fields = ('id', 'avatar', 'username', 'email')
-        read_only_fields = ('id', 'email')
+        model = User
+        fields = ('id', 'avatar', 'username', 'email', 'is_moderator')
+        read_only_fields = ('id', 'email', 'is_moderator')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=Profile.objects.all(), message="The email has already existed")],
+        validators=[
+            UniqueValidator(queryset=User.objects.all(), message="The email has already existed"),
+            RequiredValidator,
+        ],
     )
-    password = serializers.CharField(write_only=True, required=True, validators=[PasswordValidator,])
-    confirm_password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, validators=[PasswordValidator, RequiredValidator])
+    confirm_password = serializers.CharField(write_only=True,validators=[RequiredValidator])
 
     class Meta:
-        model = Profile
-        fields = ('avatar', 'username', 'email', 'password', 'confirm_password',)
-        read_only_fields = ('avatar', 'username',)
+        model = User
+        fields = ('email', 'password', 'confirm_password')
 
     def validate(self, data):
         if data['password'] != data['confirm_password']:
@@ -61,6 +53,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        def pick_random_avatar():
+            avatar = random.choice(settings.DEFAULT_AVATARS)
+            return avatar
+
+        def generate_unique_username():
+            while True:
+                uid = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+                username = f"user_{uid}"
+                if not User.objects.filter(username=username).exists():
+                    return username
+
         user = User(
             email=validated_data['email'],
             username=generate_unique_username(),
@@ -77,13 +80,13 @@ class UsernameUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=100,
         validators=[
-            UniqueValidator(queryset=Profile.objects.all(), message='The username has already existed',),
-            UsernameLengthValidator(max_length=10)
+            UniqueValidator(queryset=User.objects.all(), message='The username has already existed',),
+            LengthValidator(field_name='username', max_length=10)
         ]
     )
 
     class Meta:
-        model = Profile
+        model = User
         fields = ('username',)
 
 
@@ -96,7 +99,7 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Profile
+        model = User
         fields = ('avatar',)
 
     def update(self, instance, validated_data):
@@ -112,6 +115,7 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
 
         instance.avatar.save(f"{instance.pk}_avatar.webp", webp_file, save=False)
         instance.save()
+
         return instance
 
 

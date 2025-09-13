@@ -1,21 +1,25 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Profile
+
+User = get_user_model()
 
 
-@admin.register(Profile)
+@admin.register(User)
 class ProfileAdmin(UserAdmin):
-    model = Profile
-    list_display = ('email', 'username', 'is_staff', 'is_superuser')
+    model = User
+    list_display = ('email', 'username', 'is_moderator')
     ordering = ('email',)
     search_fields = ('email', 'username')
 
+    readonly_fields = ('date_joined', 'last_login')
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('username', 'avatar', 'google_id')}),
+        ('Personal info', {'fields': ('username', 'avatar')}),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_moderator', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )

@@ -55,7 +55,7 @@ class Profile(AbstractUser):
         null=True,
         storage=AvatarStorage()
     )
-    google_id = models.CharField(max_length=255, blank=True, null=True)
+    is_moderator = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

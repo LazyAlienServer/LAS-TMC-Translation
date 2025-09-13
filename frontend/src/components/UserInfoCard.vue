@@ -23,8 +23,8 @@ async function handleFile(event) {
   if (!file) return;
 
   try {
-    await uploadAvatar(file);
-    await userStore.loadUserInfo();
+    const response = await uploadAvatar(file);
+    userInfo.value = response.data
     toast.success('Avatar updated successfully!');
 
   } catch (error) {
@@ -46,9 +46,9 @@ async function handleUsernameUpdate() {
   loading.value = true;
 
   try {
-    await updateUsername(newUsername.value)
+    const response = await updateUsername(newUsername.value)
+    userInfo.value = response.data
     toast.success('Username updated successfully!');
-    await userStore.loadUserInfo()
 
   } catch (error) {
     const msg = error.response?.data?.toast_error
