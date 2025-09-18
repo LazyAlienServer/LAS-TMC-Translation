@@ -44,7 +44,7 @@ class SourceArticle(TimeStampedMixin, UUIDPrimaryKeyMixin, SoftDeleteMixin):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="articles")
 
     title = models.CharField(max_length=60, db_index=True, default="")
-    content_md = models.TextField(blank=True, default=dict)
+    content_md = models.TextField(blank=True, default="")
 
     status = models.IntegerField(choices=ArticleStatus.choices, default=ArticleStatus.DRAFT, db_index=True)
 
@@ -67,7 +67,7 @@ class PublishedArticle(UUIDPrimaryKeyMixin):
     article = models.ForeignKey(SourceArticle, on_delete=models.CASCADE, related_name="article_published_version")
 
     title = models.CharField(max_length=60, db_index=True, default="")
-    content_md = models.TextField(blank=True, default=dict)
+    content_md = models.TextField(blank=True, default="")
 
     published_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
 

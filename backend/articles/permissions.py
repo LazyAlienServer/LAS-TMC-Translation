@@ -45,7 +45,7 @@ class ArticleModerationEventReadPermission(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        return request.method in permissions.SAFE_METHODS and (is_moderator(request.user) or is_the_author(request.user, obj))
+        return request.method in permissions.SAFE_METHODS and (is_moderator(request.user) or is_the_author(request.user, obj.article))
 
 
 class ArticleModerationEventWritePermission(permissions.BasePermission):

@@ -17,7 +17,7 @@ class SourceArticleAuthorSerializer(serializers.ModelSerializer):
     """
 
     author_username = serializers.CharField(source='author.username')
-    title = serializers.CharField(validators=[RequiredValidator, LengthValidator(field_name='title', max_length=60)])
+    title = serializers.CharField(validators=[RequiredValidator(field_name='title'), LengthValidator(field_name='title', max_length=60)])
 
     class Meta:
         model = SourceArticle
@@ -32,7 +32,15 @@ class SourceArticleAuthorSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        return SourceArticle.objects.create(**validated_data)
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+
+        if user is None or user.is_anonymous:
+            raise serializers.ValidationError("Invalid user")
+
+        validated_data["author"] = user
+
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         instance.status = validated_data.get('status', instance.status)
@@ -118,6 +126,7 @@ class ArticleModerationEventSerializer(serializers.ModelSerializer):
             'id',
             'article',
             'snapshot',
+            'annotation',
             'type',
             'moderator',
             'created_at'
