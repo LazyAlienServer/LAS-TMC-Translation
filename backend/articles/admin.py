@@ -1,6 +1,6 @@
 from django.contrib import admin, messages
 
-from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleModerationEvent
+from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEvent
 
 
 @admin.register(SourceArticle)
@@ -109,33 +109,33 @@ class ArticleSnapshotAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ArticleModerationEvent)
-class ArticleModerationEventAdmin(admin.ModelAdmin):
-    model = ArticleModerationEvent
+@admin.register(ArticleEvent)
+class ArticleEventAdmin(admin.ModelAdmin):
+    model = ArticleEvent
     list_display = (
-        "moderator",
-        "type",
+        "actor",
+        "event_type",
         "created_at",
     )
 
     list_filter = (
-        "moderator",
-        "type",
+        "actor",
+        "event_type",
         "created_at",
     )
 
-    search_fields = ("type", "moderator__username")
+    search_fields = ("event_type", "actor__username")
     ordering = ("-created_at",)
     list_per_page = 25
     date_hierarchy = "created_at"
 
-    readonly_fields = ("article", "snapshot", "type", "moderator", "created_at")
+    readonly_fields = ("article", "snapshot", "event_type", "actor", "created_at")
 
     fieldsets = (
-        ("Key Info", {"fields": ("type", "moderator", "article", "snapshot", "annotation")}),
+        ("Key Info", {"fields": ("event_type", "actor", "article", "snapshot", "annotation")}),
         ("Timestamps", {"fields": ("created_at",)}),
     )
 
     def type_display(self, obj):
-        return obj.get_type_display()
+        return obj.get_event_type_display()
     type_display.short_description = "Type"

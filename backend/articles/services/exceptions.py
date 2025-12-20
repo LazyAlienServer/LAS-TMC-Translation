@@ -28,3 +28,10 @@ class NoChangeError(ServiceError):
     The article must be edited before re-submitted
     """
     pass
+
+
+class NoSnapshotError(ServiceError):
+    """
+    There are no snapshots available for this article.
+    """
+    pass

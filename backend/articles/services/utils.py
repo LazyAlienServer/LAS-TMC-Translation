@@ -6,11 +6,12 @@ import hashlib
 import json
 
 from articles.models import (
-    ArticleSnapshot
+    ArticleSnapshot,
+    PublishedArticle,
 )
 
 
-def hash_and_normalize(title, summary, content_md):
+def hash_and_normalize(title, content_md):
     """
     Make a 'stable representation of the article and calculate its hash value (SHA-256)'
 
@@ -20,7 +21,6 @@ def hash_and_normalize(title, summary, content_md):
 
     items_to_hash = {
         'title': title.strip(),
-        'summary': summary.strip(),
         'content_md': content_md,
     }
     items_json = json.dumps(items_to_hash, sort_keys=True)
@@ -39,6 +39,13 @@ def get_last_snapshot(article):
         .order_by('-created_at')
         .first()
     )
+
+
+def get_published_version(article):
+    """
+    Return the published version of the article
+    """
+    return PublishedArticle.objects.filter(article=article)
 
 
 def within_submit_cooldown(last_moderation_at, hours=24):

@@ -6,7 +6,7 @@ from core.utils.drf.permissions import is_moderator, is_the_author
 class SourceArticlePermission(permissions.BasePermission):
     """
     Only the author and moderators can view an article.
-    Only the author can change title, summary and content_md field of the article
+    Only the author can change title and content_md fields of the article
     """
 
     def has_permission(self, request, view):
@@ -39,19 +39,12 @@ class ArticleSnapshotPermission(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS
 
 
-class ArticleModerationEventReadPermission(permissions.BasePermission):
+class ArticleEventPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated
+        return request.method in permissions.SAFE_METHODS and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         return request.method in permissions.SAFE_METHODS and (is_moderator(request.user) or is_the_author(request.user, obj.article))
 
-
-class ArticleModerationEventWritePermission(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        return is_moderator(request.user)
+    # TODO: 还要改

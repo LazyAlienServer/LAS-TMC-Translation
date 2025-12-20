@@ -4,25 +4,23 @@ from rest_framework import routers
 
 from .views import (
     SourceArticleCreateView,
-    SourceArticleAuthorView,
-    SourceArticleModeratorView,
+    SourceArticleView,
     PublishedArticleViewSet,
     ArticleSnapshotViewSet,
-    ArticleModerationEventCreateView,
-    ArticleModerationEventReadViewset
+    ArticleEventReadViewset,
+    ArticleActionViewset,
 )
 
 
 router = routers.SimpleRouter()
 router.register(r'published_articles', PublishedArticleViewSet)
 router.register(r'article_snapshots', ArticleSnapshotViewSet)
-router.register(r'article_moderation_events', ArticleModerationEventReadViewset)
+router.register(r'article_events', ArticleEventReadViewset)
+router.register(r'article_actions', ArticleActionViewset)
 
 urlpatterns = [
+    path('source_articles/', SourceArticleView.as_view()),
     path('source_articles/create/', SourceArticleCreateView.as_view()),
-    path('source_articles/author_view/', SourceArticleAuthorView.as_view()),
-    path('source_articles/moderator_view/', SourceArticleModeratorView.as_view()),
-    path('article_moderation_events/create/', ArticleModerationEventCreateView.as_view()),
 ]
 
 urlpatterns += router.urls

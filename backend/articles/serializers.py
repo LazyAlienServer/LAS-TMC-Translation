@@ -5,7 +5,7 @@ from rest_framework.request import Request
 
 from core.utils.drf.validators import RequiredValidator, LengthValidator
 from core.utils.drf.permissions import is_moderator
-from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleModerationEvent
+from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEvent
 
 
 User = get_user_model()
@@ -24,6 +24,7 @@ class SourceArticleAuthorSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = (
             'id',
+            'status',
             'created_at',
             'updated_at',
             'author',
@@ -43,7 +44,6 @@ class SourceArticleAuthorSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        instance.status = validated_data.get('status', instance.status)
         instance.title = validated_data.get('title', instance.title)
         instance.content_md = validated_data.get('content_md', instance.content_md)
         instance.save()
@@ -63,6 +63,7 @@ class SourceArticleModeratorSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = (
             'id',
+            'status',
             'created_at',
             'updated_at',
             'is_deleted',
@@ -72,12 +73,6 @@ class SourceArticleModeratorSerializer(serializers.ModelSerializer):
             'content_md',
             'last_moderation_at',
         )
-
-    def update(self, instance, validated_data):
-        instance.status = validated_data.get('status', instance.status)
-        instance.save()
-
-        return instance
 
 
 class PublishedArticleSerializer(serializers.ModelSerializer):
@@ -115,20 +110,20 @@ class ArticleSnapshotSerializer(serializers.ModelSerializer):
         )
 
 
-class ArticleModerationEventSerializer(serializers.ModelSerializer):
+class ArticleEventSerializer(serializers.ModelSerializer):
     """
     Serializer for article moderation events. All fields are ready-only except annotation.
     """
     class Meta:
-        model = ArticleModerationEvent
+        model = ArticleEvent
         fields = '__all__'
         read_only_fields = [
             'id',
             'article',
             'snapshot',
             'annotation',
-            'type',
-            'moderator',
+            'event_type',
+            'actor',
             'created_at'
         ]
 
@@ -150,4 +145,34 @@ class ArticleModerationEventSerializer(serializers.ModelSerializer):
         return fields
 
     def create(self, validated_data):
-        return ArticleModerationEvent.objects.create(**validated_data)
+        return ArticleEvent.objects.create(**validated_data)
+
+
+class ArticleActionInputSerializer(serializers.Serializer):
+    """
+    The input serializer for all article actions,
+    which include submit, approve, reject, unpublish and delete
+    """
+    article_id = serializers.UUIDField(required=True)
+    annotation = serializers.CharField(required=False, allow_blank=True)
+
+
+class ArticleActionOutputSerializer(serializers.Serializer):
+    event_type = serializers.IntegerField()
+    actor_id = serializers.UUIDField()
+    article_id = serializers.UUIDField()
+    current_article_status = serializers.IntegerField()
+    snapshot_id = serializers.UUIDField()
+    event_id = serializers.UUIDField()
+
+    def to_representation(self, instance):
+        """
+        Add event_type_display and current_status_display to the response,
+        by using .label method
+        """
+        data = super().to_representation(instance)
+
+        data["event_type_display"] = ArticleEvent.EventType(data["event_type"]).label
+        data["current_article_status_display"] = SourceArticle.ArticleStatus(data["current_article_status"]).label
+
+        return data
