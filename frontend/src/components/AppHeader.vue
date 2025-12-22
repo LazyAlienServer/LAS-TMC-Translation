@@ -15,7 +15,7 @@ import {
     SignOutIcon,
     RocketIcon,
     PlusIcon,
-    BookIcon,
+    RepoIcon,
 } from "@/assets/icons";
 import { WebsiteIcon, LasLogo } from "@/assets";
 
@@ -75,7 +75,7 @@ async function createArticle() {
 
     <div class="flex font-medium items-center gap-3">
 
-      <div @click="createArticle" class="header-icon flex flex-row gap-x-1 font-semibold">
+      <div @click="createArticle" class="header-icon flex flex-row gap-x-1 font-semibold text-[16px]">
         <PlusIcon class="w-6 h-6 fill-current" /> Create
       </div>
 
@@ -146,7 +146,7 @@ async function createArticle() {
                 Your Profile
               </router-link>
               <router-link to="/my-articles" class="sidebar-link" @click="toggleSidebar">
-                <BookIcon class="sidebar-icon" />
+                <RepoIcon class="sidebar-icon" />
                 Your Articles
               </router-link>
               <router-link to="/settings/appearance" class="sidebar-link" @click="toggleSidebar">

@@ -1,10 +1,17 @@
 <script setup>
+import { ref } from "vue";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const props = defineProps({
   article: {
     type: Object,
     required: true,
   }
 })
+
 </script>
 
 <template>
@@ -16,18 +23,8 @@ const props = defineProps({
 
     <!-- Meta -->
     <span>
-      Status:
-      <span class="font-medium">{{ article.status_display }}</span>
-    </span>
-
-    <span>
       Created:
-      {{ new Date(article.created_at).toLocaleDateString() }}
-    </span>
-
-    <span>
-      Updated:
-      {{ new Date(article.updated_at).toLocaleDateString() }}
+      {{ new Date(article.created_at).toLocaleString() }}
     </span>
 
   </div>

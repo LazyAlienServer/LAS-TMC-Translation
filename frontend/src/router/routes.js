@@ -93,10 +93,19 @@ const routes = [
     {
         path: `/my-articles`,
         name: 'my-articles',
-        component: views.ArticleListView,
+        component: views.MyArticleListView,
         meta: {
             requiresAuth: true,
             title: 'My Articles',
+        }
+    },
+    {
+        path: `/pending-articles`,
+        name: 'pending-articles',
+        component: views.PendingArticleListView,
+        meta: {
+            requiresAuth: true,
+            title: 'Pending Articles',
         }
     },
     {

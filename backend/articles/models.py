@@ -58,17 +58,21 @@ class SourceArticle(TimeStampedMixin, UUIDPrimaryKeyMixin, SoftDeleteMixin):
         return self.title
 
 
-class PublishedArticle(UUIDPrimaryKeyMixin):
+class PublishedArticle(UUIDPrimaryKeyMixin, TimeStampedMixin):
+    """
+    Mixin fields:
+    - id
+    - created_at
+    - updated_at
+    """
 
     article = models.OneToOneField(SourceArticle, on_delete=models.CASCADE, related_name="article_published_version")
 
     title = models.CharField(max_length=60, db_index=True, default="")
     content = models.JSONField(blank=True, default=dict)
 
-    published_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
-
     class Meta:
-        ordering = ['-published_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"Published version of article {self.article}"
@@ -89,6 +93,7 @@ class ArticleSnapshot(UUIDPrimaryKeyMixin):
     content_hash = models.CharField(max_length=64, blank=True, default="", db_index=True)
 
     created_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
+    is_moderated = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']

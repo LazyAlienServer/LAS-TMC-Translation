@@ -28,14 +28,7 @@ from .services.articles import (
 
 class SourceArticleViewSet(ModelViewSet):
     permission_classes = (SourceArticlePermission,)
-
-    # Only moderators can see all source articles.
-    def get_queryset(self):
-        queryset = SourceArticle.objects.select_related("author")
-
-        if is_moderator(self.request.user):
-            return queryset
-        return queryset.filter(author=self.request.user)
+    queryset = SourceArticle.objects.select_related("author")
 
     def get_serializer_class(self):
         # Author - Write Serializer | Moderators - Read Serializer
@@ -87,6 +80,16 @@ class ArticleSnapshotViewSet(ReadOnlyModelViewSet):
     serializer_class = ArticleSnapshotSerializer
     permission_classes = (ArticleSnapshotPermission,)
 
+    @action(detail=False, methods=['get'])
+    def pending(self, request):
+        """
+        Return not moderated article snapshots
+        """
+        queryset = ArticleSnapshot.objects.filter(is_moderated=False)
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
+
 
 class ArticleEventReadViewset(ReadOnlyModelViewSet):
     queryset = ArticleEvent.objects.all()
@@ -102,12 +105,14 @@ class ArticleEventReadViewset(ReadOnlyModelViewSet):
 
 class ArticleActionViewset(GenericViewSet):
     queryset = SourceArticle.objects.all()
+    lookup_field = "pk"
 
     @action(detail=True, methods=['post'], permission_classes=[SourceArticlePermission,])
     def submit(self, request, pk=None):
         input_serializer = ArticleActionInputSerializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
 
+        # TODO: 让serializer从路由里面拿id，我现在暂时在请求体当中放入了id
         result = submit(
             article_id=pk,
             actor=request.user,

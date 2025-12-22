@@ -23,7 +23,6 @@ def select_article_for_update(article_id):
     article = (
         SourceArticle.objects
         .select_for_update()
-        .select_related('author')
         .get(pk=article_id)
     )
 
@@ -41,6 +40,25 @@ def create_article_event(article, snapshot, annotation, event_type, actor):
     )
 
     return article_event
+
+
+def create_or_update_published_article(*, article, snapshot):
+    published = get_published_version(article)
+
+    if published:
+        published.title = snapshot.title
+        published.content = snapshot.content
+        published.save(update_fields=['title', 'content'])
+
+        return published
+
+    published_article = PublishedArticle.objects.create(
+        article=article,
+        title=snapshot.title,
+        content=snapshot.content,
+    )
+
+    return published_article
 
 
 def build_article_action_result(*, article, actor, event, snapshot):
@@ -127,12 +145,7 @@ def approve(*, article_id, actor, annotation=None):
     if not snapshot:
         raise NoSnapshotError("There are no snapshots for this article!")
 
-    # Create Published Article
-    published_article = PublishedArticle.objects.create(
-        article=article,
-        title=snapshot.title,
-        content=snapshot.content,
-    )
+    create_or_update_published_article(article=article, snapshot=snapshot)
 
     # Create Article Event
     article_event = create_article_event(
@@ -143,6 +156,10 @@ def approve(*, article_id, actor, annotation=None):
     article.status = SourceArticle.ArticleStatus.PUBLISHED
     article.last_moderation_at = timezone.now()
     article.save(update_fields=['status', 'last_moderation_at'])
+
+    # Update Article Snapshot
+    snapshot.is_moderated = True
+    snapshot.save(update_fields=['is_moderated'])
 
     return build_article_action_result(article=article, actor=actor, event=article_event, snapshot=snapshot)
 
@@ -168,6 +185,10 @@ def reject(*, article_id, actor, annotation=None):
     article.status = SourceArticle.ArticleStatus.REJECTED
     article.last_moderation_at = timezone.now()
     article.save(update_fields=['status', 'last_moderation_at'])
+
+    # Update Article Snapshot
+    snapshot.is_moderated = True
+    snapshot.save(update_fields=['is_moderated'])
 
     return build_article_action_result(article=article, actor=actor, event=article_event, snapshot=snapshot)
 

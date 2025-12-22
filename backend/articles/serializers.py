@@ -74,7 +74,8 @@ class PublishedArticleSerializer(serializers.ModelSerializer):
             'article',
             'title',
             'content',
-            'published_at'
+            'created_at',
+            'updated_at',
         )
 
 
@@ -92,7 +93,8 @@ class ArticleSnapshotSerializer(serializers.ModelSerializer):
             'title',
             'content',
             'content_hash',
-            'created_at'
+            'created_at',
+            'is_moderated',
         )
 
 

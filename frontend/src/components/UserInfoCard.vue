@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { useUserStore } from "@/stores";
 import { uploadAvatar, updateUsername } from "@/api";
 import { useToast } from "vue-toastification";
-import { PencilIcon, PersonIcon, MailIcon } from "@/assets/icons"
+import { PencilIcon, PersonIcon, MailIcon, RocketIcon } from "@/assets/icons"
 
 const toast = useToast();
 const userStore = useUserStore();
@@ -63,7 +63,7 @@ async function handleUsernameUpdate() {
 </script>
 
 <template>
-  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full w-100">
+  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full w-70">
     <div class="flex flex-col gap-y-7 items-center relative">
 
       <img
@@ -133,6 +133,11 @@ async function handleUsernameUpdate() {
         <div class="flex flex-row items-center gap-1">
           <MailIcon class="w-4.5 h-4.5 fill-current"/>
           <p class="text-[16px]">Email: {{ userInfo.email }}</p>
+        </div>
+
+        <div class="flex flex-row items-center gap-1">
+          <RocketIcon class="w-4.5 h-4.5 fill-current"/>
+          <p class="text-[16px]">Date Joined: {{ new Date(userInfo.date_joined).toLocaleDateString() }}</p>
         </div>
 
       </div>

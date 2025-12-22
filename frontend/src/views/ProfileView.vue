@@ -1,5 +1,5 @@
 <script setup>
-import { UserInfoCard } from "@/components";
+import { UserInfoCard, Profile } from "@/components";
 
 </script>
 
@@ -7,6 +7,7 @@ import { UserInfoCard } from "@/components";
   <div class="row-body-container">
 
     <UserInfoCard />
+    <Profile />
 
   </div>
 </template>

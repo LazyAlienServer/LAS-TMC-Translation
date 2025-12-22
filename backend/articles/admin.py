@@ -64,23 +64,23 @@ class PublishedArticleAdmin(admin.ModelAdmin):
     model = PublishedArticle
     list_display = (
         "title",
-        "published_at",
+        "created_at",
     )
     list_filter = (
-        "published_at",
+        "created_at",
     )
 
     search_fields = ("title",)
-    ordering = ("-published_at",)
+    ordering = ("-created_at",)
     list_per_page = 25
-    date_hierarchy = "published_at"
+    date_hierarchy = "created_at"
 
-    readonly_fields = ("id", "published_at", "article", "title", "content")
+    readonly_fields = ("id", "created_at", "article", "title", "content")
 
     fieldsets = (
         ("Basic", {"fields": ("id", "title", "content")}),
         ("Key Info", {"fields": ("article",)}),
-        ("Timestamps", {"fields": ("published_at",)}),
+        ("Timestamps", {"fields": ("created_at",)}),
     )
 
 
@@ -100,11 +100,11 @@ class ArticleSnapshotAdmin(admin.ModelAdmin):
     list_per_page = 25
     date_hierarchy = "created_at"
 
-    readonly_fields = ("id", "created_at", "article", "title", "content", "content_hash")
+    readonly_fields = ("id", "created_at", "article", "title", "content", "content_hash", "is_moderated")
 
     fieldsets = (
         ("Basic", {"fields": ("id", "title", "content", "content_hash")}),
-        ("Key Info", {"fields": ("article",)}),
+        ("Key Info", {"fields": ("article", "is_moderated")}),
         ("Timestamps", {"fields": ("created_at",)}),
     )
 
