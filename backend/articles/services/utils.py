@@ -11,7 +11,7 @@ from articles.models import (
 )
 
 
-def hash_and_normalize(title, content_md):
+def hash_and_normalize(title, content):
     """
     Make a 'stable representation of the article and calculate its hash value (SHA-256)'
 
@@ -21,7 +21,7 @@ def hash_and_normalize(title, content_md):
 
     items_to_hash = {
         'title': title.strip(),
-        'content_md': content_md,
+        'content': content,
     }
     items_json = json.dumps(items_to_hash, sort_keys=True)
 

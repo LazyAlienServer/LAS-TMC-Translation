@@ -4,7 +4,7 @@ from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEve
 
 
 @admin.register(SourceArticle)
-class ArticleAdmin(admin.ModelAdmin):
+class SourceArticleAdmin(admin.ModelAdmin):
     model = SourceArticle
     list_display = (
         "title",
@@ -26,10 +26,10 @@ class ArticleAdmin(admin.ModelAdmin):
     list_per_page = 25
     date_hierarchy = "created_at"
 
-    readonly_fields = ("created_at", "updated_at", "last_moderation_at")
+    readonly_fields = ("id", "created_at", "updated_at", "last_moderation_at")
 
     fieldsets = (
-        ("Basic", {"fields": ("title", "content_md")}),
+        ("Basic", {"fields": ("id", "title", "content")}),
         ("Ownership & Status", {"fields": ("author", "status", "is_deleted")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
@@ -60,7 +60,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 @admin.register(PublishedArticle)
-class ArticleAdmin(admin.ModelAdmin):
+class PublishedArticleAdmin(admin.ModelAdmin):
     model = PublishedArticle
     list_display = (
         "title",
@@ -75,10 +75,10 @@ class ArticleAdmin(admin.ModelAdmin):
     list_per_page = 25
     date_hierarchy = "published_at"
 
-    readonly_fields = ("published_at", "article", "title", "content_md")
+    readonly_fields = ("id", "published_at", "article", "title", "content")
 
     fieldsets = (
-        ("Basic", {"fields": ("title", "content_md")}),
+        ("Basic", {"fields": ("id", "title", "content")}),
         ("Key Info", {"fields": ("article",)}),
         ("Timestamps", {"fields": ("published_at",)}),
     )
@@ -100,10 +100,10 @@ class ArticleSnapshotAdmin(admin.ModelAdmin):
     list_per_page = 25
     date_hierarchy = "created_at"
 
-    readonly_fields = ("created_at", "article", "title", "content_md", "content_hash")
+    readonly_fields = ("id", "created_at", "article", "title", "content", "content_hash")
 
     fieldsets = (
-        ("Basic", {"fields": ("title", "content_md", "content_hash")}),
+        ("Basic", {"fields": ("id", "title", "content", "content_hash")}),
         ("Key Info", {"fields": ("article",)}),
         ("Timestamps", {"fields": ("created_at",)}),
     )
@@ -129,10 +129,10 @@ class ArticleEventAdmin(admin.ModelAdmin):
     list_per_page = 25
     date_hierarchy = "created_at"
 
-    readonly_fields = ("article", "snapshot", "event_type", "actor", "created_at")
+    readonly_fields = ("id", "article", "snapshot", "event_type", "actor", "created_at")
 
     fieldsets = (
-        ("Key Info", {"fields": ("event_type", "actor", "article", "snapshot", "annotation")}),
+        ("Key Info", {"fields": ("id", "event_type", "actor", "article", "snapshot", "annotation")}),
         ("Timestamps", {"fields": ("created_at",)}),
     )
 

@@ -10,37 +10,37 @@ const routes = [
         path: '/',
         name: 'home',
         component: views.HomeView,
-        meta: {title: 'Home'},
+        meta: { title: 'Home' },
     },
     {
         path: '/contact-us',
         name: 'contact',
         component: views.ContactView,
-        meta: {title: 'Contact Us'},
+        meta: { title: 'Contact Us' },
     },
     {
         path: '/donate',
         name: 'donate',
         component: views.DonateView,
-        meta: {title: 'Donate'},
+        meta: { title: 'Donate' },
     },
     {
         path: '/login',
         name: 'login',
         component: views.LoginView,
-        meta: {title: 'Login'},
+        meta: { title: 'Login' },
     },
     {
         path: '/logout',
         name: 'logout',
         component: views.LogoutView,
-        meta: {title: 'Logout'},
+        meta: { title: 'Logout' },
     },
     {
         path: '/register',
         name: 'register',
         component: views.RegisterView,
-        meta: {title: 'Register'},
+        meta: { title: 'Register' },
     },
     {
         path: '/profile',
@@ -89,6 +89,24 @@ const routes = [
           requiresAuth: true,
           title: 'Bookmarks'
       },
+    },
+    {
+        path: `/my-articles`,
+        name: 'my-articles',
+        component: views.ArticleListView,
+        meta: {
+            requiresAuth: true,
+            title: 'My Articles',
+        }
+    },
+    {
+        path: `/articles/:id/edit/`,
+        name: 'article-editor',
+        component: views.ArticleEditorView,
+        meta: {
+            requiresAuth: true,
+            title: 'Article Editor',
+        }
     },
     {
         path: '/:pathMatch(.*)*',

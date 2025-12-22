@@ -11,3 +11,5 @@ export { default as AppearanceSettingView } from './AppearanceSettingView.vue';
 export { default as LanguageSettingView } from './LanguageSettingView.vue';
 export { default as BookmarksView } from './BookmarksView.vue';
 export { default as NotFoundView } from './NotFoundView.vue';
+export { default as ArticleEditorView } from './ArticleEditorView.vue';
+export { default as ArticleListView } from './ArticleListView.vue';

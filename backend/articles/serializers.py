@@ -11,68 +11,54 @@ from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEve
 User = get_user_model()
 
 
-class SourceArticleAuthorSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the author
-    """
-
-    author_username = serializers.CharField(source='author.username')
-    title = serializers.CharField(validators=[RequiredValidator(field_name='title'), LengthValidator(field_name='title', max_length=60)])
-
-    class Meta:
-        model = SourceArticle
-        fields = '__all__'
-        read_only_fields = (
-            'id',
-            'status',
-            'created_at',
-            'updated_at',
-            'author',
-            'author_username',
-            'last_moderation_at'
-        )
-
-    def create(self, validated_data):
-        request = self.context.get("request")
-        user = getattr(request, "user", None)
-
-        if user is None or user.is_anonymous:
-            raise serializers.ValidationError("Invalid user")
-
-        validated_data["author"] = user
-
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.content_md = validated_data.get('content_md', instance.content_md)
-        instance.save()
-
-        return instance
-
-
-class SourceArticleModeratorSerializer(serializers.ModelSerializer):
+class SourceArticleReadSerializer(serializers.ModelSerializer):
     """
     Serializer for moderators
     """
 
     author_username = serializers.CharField(source='author.username')
+    status_display = serializers.SerializerMethodField()
 
     class Meta:
         model = SourceArticle
         fields = '__all__'
-        read_only_fields = (
+        read_only_fields = [
             'id',
+            'author',
+            'title',
+            'content',
             'status',
+            'last_moderation_at',
             'created_at',
             'updated_at',
             'is_deleted',
-            'author',
             'author_username',
-            'title',
-            'content_md',
-            'last_moderation_at',
-        )
+            'status_display'
+        ]
+
+    def get_status_display(self, obj):
+        return obj.get_status_display()
+
+
+class SourceArticleWriteSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the author, can be used to create/update
+    """
+
+    title = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        validators=[RequiredValidator(field_name='title'), LengthValidator(field_name='title', max_length=60)],
+    )
+
+    class Meta:
+        model = SourceArticle
+        fields = ['title', 'content']
+
+    def create(self, validated_data):
+        validated_data.setdefault("title", "Untitled")
+
+        return super().create(validated_data)
 
 
 class PublishedArticleSerializer(serializers.ModelSerializer):
@@ -87,7 +73,7 @@ class PublishedArticleSerializer(serializers.ModelSerializer):
             'id',
             'article',
             'title',
-            'content_md',
+            'content',
             'published_at'
         )
 
@@ -104,7 +90,7 @@ class ArticleSnapshotSerializer(serializers.ModelSerializer):
             'id',
             'article',
             'title',
-            'content_md',
+            'content',
             'content_hash',
             'created_at'
         )
@@ -161,7 +147,7 @@ class ArticleActionOutputSerializer(serializers.Serializer):
     event_type = serializers.IntegerField()
     actor_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
-    current_article_status = serializers.IntegerField()
+    status = serializers.IntegerField()
     snapshot_id = serializers.UUIDField()
     event_id = serializers.UUIDField()
 
@@ -173,6 +159,6 @@ class ArticleActionOutputSerializer(serializers.Serializer):
         data = super().to_representation(instance)
 
         data["event_type_display"] = ArticleEvent.EventType(data["event_type"]).label
-        data["current_article_status_display"] = SourceArticle.ArticleStatus(data["current_article_status"]).label
+        data["status_display"] = SourceArticle.ArticleStatus(data["status"]).label
 
         return data

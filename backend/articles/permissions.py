@@ -6,7 +6,7 @@ from core.utils.drf.permissions import is_moderator, is_the_author
 class SourceArticlePermission(permissions.BasePermission):
     """
     Only the author and moderators can view an article.
-    Only the author can change title and content_md fields of the article
+    Only the author can change title and content fields of the article
     """
 
     def has_permission(self, request, view):

@@ -49,7 +49,7 @@ def build_article_action_result(*, article, actor, event, snapshot):
         "event_type": event.event_type,
         "actor_id": actor.id,
         "article_id": article.id,
-        "current_article_status": article.status,
+        "status": article.status,
         "snapshot_id": snapshot.id,
         "event_id": event.id,
     }
@@ -66,7 +66,7 @@ def submit(*, article_id, actor, annotation=None):
 
     current_hash = hash_and_normalize(
         article.title,
-        article.content_md
+        article.content
     )
 
     # If unchanged, raise NoChangeError
@@ -80,7 +80,7 @@ def submit(*, article_id, actor, annotation=None):
     snapshot = ArticleSnapshot.objects.create(
         article=article,
         title=article.title,
-        content_md=article.content_md,
+        content=article.content,
         content_hash=current_hash,
     )
 
@@ -131,7 +131,7 @@ def approve(*, article_id, actor, annotation=None):
     published_article = PublishedArticle.objects.create(
         article=article,
         title=snapshot.title,
-        content_md=snapshot.content_md,
+        content=snapshot.content,
     )
 
     # Create Article Event

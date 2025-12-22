@@ -1,5 +1,6 @@
 <script setup>
 import { AppHeader, AppFooter } from "@/components";
+
 </script>
 
 <template>

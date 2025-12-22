@@ -1,10 +1,11 @@
-import { useUserStore } from "@/stores/useUserStore";
+import { useUserStore, useArticleStore } from "@/stores";
 
 
 let hasInitialized = false;
 
 async function globalBeforeEach(to) {
     const userStore = useUserStore();
+    const articleStore = useArticleStore();
 
     if (!hasInitialized) {
         await userStore.initializeUser();
@@ -23,6 +24,10 @@ async function globalBeforeEach(to) {
 
     if (to.meta.title) {
         document.title = to.meta.title;
+    }
+
+    if (to.name === 'article-editor' && to.params.id) {
+        articleStore.switchArticle(to.params.id)
     }
 }
 

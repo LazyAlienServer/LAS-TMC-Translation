@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { loginUser, getUserProfile, refreshUserLoginToken, refreshUserLoginTokenBare, api } from "@/api";
 import { setRefreshToken, getRefreshToken, removeRefreshToken } from "@/utils";
 
-const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore('user', () => {
     /* states */
     const accessToken = ref(localStorage.getItem("accessToken"));
     const refreshToken = ref(getRefreshToken());
@@ -160,5 +160,3 @@ const useUserStore = defineStore('user', () => {
         initializeUser,
     };
 });
-
-export { useUserStore };

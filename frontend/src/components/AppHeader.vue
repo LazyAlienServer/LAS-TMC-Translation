@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import { useUserStore, useThemeStore } from "@/stores";
 import {
     YouTubeBlackIcon,
@@ -14,9 +14,17 @@ import {
     SignInIcon,
     SignOutIcon,
     RocketIcon,
+    PlusIcon,
+    BookIcon,
 } from "@/assets/icons";
 import { WebsiteIcon, LasLogo } from "@/assets";
 
+import { useToast } from "vue-toastification";
+import { useArticleStore } from "@/stores"
+
+const articleStore = useArticleStore();
+const toast = useToast();
+const router = useRouter();
 const userStore = useUserStore();
 const themeStore = useThemeStore();
 const userInfo = computed(() => userStore.userInfo);
@@ -31,10 +39,30 @@ function toggleTheme() {
   themeStore.toggleTheme();
 }
 
+const loading = ref(false)
+
+async function createArticle() {
+  loading.value = true
+  try {
+    const response = await articleStore.create()
+    const id = response.data.id
+    console.log("Article successfully created!")
+    await router.push({
+      name: "article-editor",
+      params: { id }
+    })
+  } catch (error) {
+    toast.error(error.response?.data?.toast_error);
+    console.error("Failed to create a new article", error)
+  } finally {
+    loading.value = false
+  }
+}
+
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md custom-bg no-select">
+  <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md backgrounds-auto no-select">
     <div class="flex flex-row items-center gap-9">
       <router-link :to="{ name: 'home' }">
         <WebsiteIcon class="w-auto h-10"/>
@@ -46,6 +74,10 @@ function toggleTheme() {
     </div>
 
     <div class="flex font-medium items-center gap-3">
+
+      <div @click="createArticle" class="header-icon flex flex-row gap-x-1 font-semibold">
+        <PlusIcon class="w-6 h-6 fill-current" /> Create
+      </div>
 
       <a href="https://www.youtube.com/@redstonevideotranslation5478" target="_blank" rel="noopener" class="header-icon">
         <YouTubeBlackIcon class="w-6 h-6 fill-current" />
@@ -112,6 +144,10 @@ function toggleTheme() {
               <router-link to="/profile" class="sidebar-link" @click="toggleSidebar">
                 <PersonIcon class="sidebar-icon" />
                 Your Profile
+              </router-link>
+              <router-link to="/my-articles" class="sidebar-link" @click="toggleSidebar">
+                <BookIcon class="sidebar-icon" />
+                Your Articles
               </router-link>
               <router-link to="/settings/appearance" class="sidebar-link" @click="toggleSidebar">
                 <GearIcon class="sidebar-icon" />

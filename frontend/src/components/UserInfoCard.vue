@@ -63,7 +63,7 @@ async function handleUsernameUpdate() {
 </script>
 
 <template>
-  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full">
+  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full w-100">
     <div class="flex flex-col gap-y-7 items-center relative">
 
       <img
