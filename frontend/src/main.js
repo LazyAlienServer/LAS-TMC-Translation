@@ -6,7 +6,7 @@ import "@/assets/css/app.css"
 import { setupGlobalErrorHandler } from "@/utils";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import { useThemeStore } from "@/stores";
+import { useThemeStore, useUserStore } from "@/stores";
 
 
 const app = createApp(App);
@@ -21,7 +21,10 @@ app.use(Toast, {
 
 setupGlobalErrorHandler(app);
 
-const themeStore = useThemeStore()
-themeStore.initTheme()
+const themeStore = useThemeStore();
+themeStore.initTheme();
+const userStore = useUserStore();
+userStore.initUser()
+    .catch(() => {userStore.logout();})
 
 app.mount('#app');

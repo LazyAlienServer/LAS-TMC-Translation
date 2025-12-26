@@ -1,4 +1,4 @@
-import api from './axiosInstance'
+import { api } from './axiosInstance'
 
 function getSourceArticles() {
     return api.get('/article/source_articles/', { withCredentials: true });

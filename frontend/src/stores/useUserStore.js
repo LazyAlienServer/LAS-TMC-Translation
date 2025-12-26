@@ -1,162 +1,82 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { loginUser, getUserProfile, refreshUserLoginToken, refreshUserLoginTokenBare, api } from "@/api";
+import { ref, computed } from 'vue';
+import { loginUser, getUserProfile, refreshUserLoginToken } from "@/api";
 import { setRefreshToken, getRefreshToken, removeRefreshToken } from "@/utils";
 
 export const useUserStore = defineStore('user', () => {
     /* states */
-    const accessToken = ref(localStorage.getItem("accessToken"));
-    const refreshToken = ref(getRefreshToken());
+    const accessToken = ref(null);
     const userInfo = ref(null);
-    const isLoggedIn = ref(!!accessToken.value);
+    const isLoggedIn = computed(() => !!accessToken.value);
 
 
     /* Tools */
-    let refreshTimer = null;
+    const refreshTimer = ref(null);
 
     function scheduleTokenRefresh(expiresInSeconds) {
+        // 可能有问题
         clearTimeout(refreshTimer);
         const refreshDelay = (expiresInSeconds - 60) * 1000;
 
-        refreshTimer = setTimeout(() => {
-            refreshAccessTokenBare().catch((error) => {
-                console.warn(error);
-            })
+        refreshTimer.value = setTimeout(() => {
+            refreshAccessToken()
+                .then(() => {console.log("Access token successfully refreshed!")})
+                .catch((error) => {console.warn(error);})
         }, refreshDelay);
     }
 
-    function setToken(access, refresh, refresh_token_lifetime) {
-        accessToken.value = access;
-        refreshToken.value = refresh;
-
-        localStorage.setItem("accessToken", access);
-        setRefreshToken(refresh, refresh_token_lifetime);
-
-        api.defaults.headers.common['Authorization'] = 'Bearer ' + access;
-    }
-
-    function removeToken() {
-        localStorage.removeItem("accessToken");
-        removeRefreshToken();
-
-        delete api.defaults.headers.common['Authorization'];
-    }
-
-
     /* actions */
+    async function loadUserInfo() {
+        const response = await getUserProfile();
+
+        userInfo.value = response.data;
+    }
+
     async function login(email, password) {
         const response = await loginUser(email, password);
 
-        setToken(response.data.access, response.data.refresh, parseInt(response.data.refresh_token_lifetime));
-        isLoggedIn.value = true;
-        console.log("logged in")
-
-        try {
-            await loadUserInfo();
-        } catch (error) {
-            console.warn(error);
-        }
-
-        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
-    }
-
-    function logout() {
-        clearTimeout(refreshTimer);
-
-        accessToken.value = '';
-        refreshToken.value = '';
-        userInfo.value = null;
-        isLoggedIn.value = false;
-
-        removeToken();
-    }
-
-    async function loadUserInfo() {
-        if (!accessToken.value) {
-            throw new Error('Access token is missing (this should not happen)');
-        }
-
-        try {
-            const response = await getUserProfile(accessToken.value);
-            userInfo.value = response.data;
-
-        } catch (error) {
-            console.log("Obtain user info failed: ", error);
-            throw error;
-        }
-    }
-
-    function handleNewToken(response) {
         accessToken.value = response.data.access;
-        localStorage.setItem("accessToken", accessToken.value);
-        api.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken.value;
 
-        isLoggedIn.value = true;
+        localStorage.setItem("accessToken", accessToken.value);
+        setRefreshToken(response.data.refresh, parseInt(response.data.refresh_token_lifetime));
+
+        await loadUserInfo();
 
         scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
     }
 
     async function refreshAccessToken() {
-        const storedRefreshToken = getRefreshToken();
+        const response = await refreshUserLoginToken(getRefreshToken());
 
-        if (!storedRefreshToken) {
-            throw new Error('Refresh token is missing');
-        }
+        accessToken.value = response.data.access;
+        localStorage.setItem('accessToken', accessToken.value);
 
-        try {
-            const response = await refreshUserLoginToken(storedRefreshToken);
-            handleNewToken(response)
-
-        } catch(error) {
-            console.log("Refresh access token failed: ", error);
-            logout();
-        }
+        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
     }
 
-    // retry using bare axios request
-    async function refreshAccessTokenBare() {
-        const storedRefreshToken = getRefreshToken();
-        if (!storedRefreshToken) throw new Error('Refresh token is missing');
+    function logout() {
+        clearTimeout(refreshTimer.value);
 
-        try {
-            const response = await refreshUserLoginTokenBare(storedRefreshToken);
-            handleNewToken(response)
+        accessToken.value = null;
+        userInfo.value = null;
 
-        } catch(error) {
-            console.log("Refresh access token failed: ", error);
-            logout();
-        }
+        localStorage.removeItem("accessToken");
+        removeRefreshToken();
     }
 
-    async function initializeUser() {
-        if (accessToken.value) {
-            api.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken.value;
+    async function initUser() {
+        accessToken.value = localStorage.getItem('accessToken');
 
-            try {
-                await loadUserInfo();
-            } catch (error) {
-                console.warn("Access token is invalid, trying to refresh...");
-                try {
-                    await refreshAccessTokenBare();
-                    await loadUserInfo();
-                } catch (error) {
-                    console.error("Refresh failed, logging out.");
-                    logout();
-                }
-            }
-        }
+        await loadUserInfo();
     }
 
     return {
         accessToken,
-        refreshToken,
         userInfo,
         isLoggedIn,
         login,
         logout,
-        loadUserInfo,
         refreshAccessToken,
-        refreshAccessTokenBare,
-        initializeUser,
+        initUser,
     };
 });

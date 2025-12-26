@@ -18,15 +18,12 @@ export const useArticleStore = defineStore('article', () => {
         const response = await createSourceArticle()
 
         switchArticle(response.data.id, response.data.status)
-        console.log("Article successfully created!")
 
         return response
     }
 
     async function update(title, content) {
         const response = await updateSourceArticle(currentId.value, title, content)
-
-        console.log("Article successfully updated!")
 
         return response
     }

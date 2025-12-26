@@ -1,16 +1,9 @@
 import { useUserStore, useArticleStore } from "@/stores";
 
 
-let hasInitialized = false;
-
 async function globalBeforeEach(to) {
     const userStore = useUserStore();
     const articleStore = useArticleStore();
-
-    if (!hasInitialized) {
-        await userStore.initializeUser();
-        hasInitialized = true;
-    }
 
     const isLoggedIn = userStore.isLoggedIn;
 

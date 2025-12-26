@@ -132,7 +132,7 @@ async function createArticle() {
                 class="w-10 h-10 rounded-full object-cover border border-gray-300"
             />
             <p
-                class="text-[15px] font-bold"
+                class="text-[17px] font-bold"
             >{{ userInfo.username }}
             </p>
           </div>
@@ -143,19 +143,19 @@ async function createArticle() {
             <li>
               <router-link to="/profile" class="sidebar-link" @click="toggleSidebar">
                 <PersonIcon class="sidebar-icon" />
-                Your Profile
+                Profile
               </router-link>
               <router-link to="/my-articles" class="sidebar-link" @click="toggleSidebar">
                 <RepoIcon class="sidebar-icon" />
-                Your Articles
+                Articles
               </router-link>
               <router-link to="/settings/appearance" class="sidebar-link" @click="toggleSidebar">
                 <GearIcon class="sidebar-icon" />
-                Your Settings
+                Settings
               </router-link>
               <router-link to="/bookmarks" class="sidebar-link" @click="toggleSidebar">
                 <BookmarkIcon class="sidebar-icon" />
-                Your Bookmarks
+                Bookmarks
               </router-link>
             </li>
 

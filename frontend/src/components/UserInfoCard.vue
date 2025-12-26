@@ -137,7 +137,7 @@ async function handleUsernameUpdate() {
 
         <div class="flex flex-row items-center gap-1">
           <RocketIcon class="w-4.5 h-4.5 fill-current"/>
-          <p class="text-[16px]">Date Joined: {{ new Date(userInfo.date_joined).toLocaleDateString() }}</p>
+          <p class="text-[16px]">Joined Since: {{ new Date(userInfo.date_joined).toLocaleDateString() }}</p>
         </div>
 
       </div>

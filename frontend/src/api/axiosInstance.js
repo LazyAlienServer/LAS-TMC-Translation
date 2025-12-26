@@ -1,17 +1,21 @@
 import axios from 'axios'
 import { useUserStore } from "@/stores/useUserStore";
+import { getRefreshToken } from '@/utils'
 
 const api = axios.create({
     baseURL: '/api/v1',
     timeout: 10000,
 })
 
+// Do not call useUserStore() outside the interceptors
 let isRefreshing = false
 let refreshPromise = null
 const subscribers = []
 
-function onRefreshed(newToken) {
-    subscribers.forEach(callback => callback(newToken))
+function onRefreshed() {
+    subscribers.forEach(function (callback) {
+        callback()
+    });
     subscribers.length = 0;
 }
 
@@ -22,13 +26,10 @@ function addSubscriber(callback) {
 api.interceptors.request.use((config) => {
     const userStore = useUserStore();
 
-    // If there is an accessToken available but the caller forgets to set it
-    if (userStore.accessToken && !(config.headers && config.headers.authorization)) {
-        config.headers = {...(config.headers || {}), Authorization: `Bearer ${userStore.accessToken}` };
-    }
+    config.headers.Authorization = `Bearer ${userStore.accessToken}`;
 
     return config;
-})
+});
 
 api.interceptors.response.use(
     function (response) {
@@ -38,28 +39,28 @@ api.interceptors.response.use(
         const userStore = useUserStore();
         const originalRequest = error.config || {};
         const status = error?.response?.status
+        const refreshToken = getRefreshToken();
 
         // Only enter the refresh logic when the status is 401
         if (status !== 401) {
             return Promise.reject(error);
         }
 
-        if ( !userStore.refreshToken || originalRequest._retry) {
+        // if no refreshToken exist and has retried request, logout and throw error
+        if ( !refreshToken || originalRequest._retry) {
             userStore.logout();
             return Promise.reject(error);
         }
+
         originalRequest._retry = true;
 
         // If a refresh process exists, put the new refresh request in the waiting queue
         if (isRefreshing && refreshPromise) {
             return new Promise((resolve, reject) => {
                 // Add a callback function into the subscriber list
-                addSubscriber((newToken) => {
+                addSubscriber(() => {
                     try {
-                        // Use the updated token to retry the request
-                        originalRequest.headers = { ...(originalRequest.headers || {}), Authorization: `Bearer ${newToken}` }
                         resolve(api(originalRequest))
-
                     } catch (error) {
                         reject(error)
                     }
@@ -71,15 +72,12 @@ api.interceptors.response.use(
         try {
             isRefreshing = true
 
-            //  Use the bare refresh function (only use axios)
-            refreshPromise = userStore.refreshAccessTokenBare()
+            refreshPromise = userStore.refreshAccessToken()
             await refreshPromise
+            console.log("Access token successfully refreshed!")
 
-            const newToken = userStore.accessToken
-            onRefreshed(newToken)
+            onRefreshed()
 
-            // retry the request
-            originalRequest.headers = { ...(originalRequest.headers || {}), Authorization: `Bearer ${newToken}` }
             return api(originalRequest)
 
         } catch (refreshErr) {
@@ -91,9 +89,14 @@ api.interceptors.response.use(
             isRefreshing = false
             refreshPromise = null
         }
-
-        return Promise.reject(error);
     }
 );
 
-export default api
+
+// for requests outside the auth system
+const apiBare = axios.create({
+    baseURL: '/api/v1',
+    timeout: 10000,
+})
+
+export { api, apiBare }

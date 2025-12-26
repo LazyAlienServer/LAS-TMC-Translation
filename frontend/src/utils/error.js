@@ -28,12 +28,6 @@ function setupGlobalErrorHandler(app) {
             info: info,
             component: instance?.$options?.name || 'anonymous',
         });
-
-        // 你可以弹出一个 Toast（如果你用的是 vue-toastification 之类的）
-        // showErrorToast('页面出错，请稍后重试');
-
-
-        // 如果需要，统一做处理：比如跳转到错误页
     };
 
     // global JS errors
