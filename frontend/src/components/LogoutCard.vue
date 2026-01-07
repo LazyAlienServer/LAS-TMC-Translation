@@ -34,7 +34,9 @@ function onLogout() {
     <p><b>Username: </b>{{ userInfo.username }}</p>
     <p><b>Email: </b>{{ userInfo.email }}</p>
 
-    <button @click="onLogout">Sign out</button>
+    <button @click="onLogout" class="form-btn">
+      Sign out
+    </button>
 
   </div>
 </template>

@@ -68,7 +68,7 @@ def build_article_action_result(*, article, actor, event, snapshot):
         "actor_id": actor.id,
         "article_id": article.id,
         "status": article.status,
-        "snapshot_id": snapshot.id,
+        "snapshot_id": snapshot.id if snapshot else None,
         "event_id": event.id,
     }
 
@@ -227,8 +227,7 @@ def delete(*, article_id, actor, annotation=None):
         raise StateTransitionError("A pending article cannot be deleted! Please withdraw it from moderation first.")
 
     snapshot = get_last_snapshot(article)
-    if not snapshot:
-        raise NoSnapshotError("There are no snapshots for this article!")
+
     published_article = get_published_version(article)
 
     # Soft Delete Source Article

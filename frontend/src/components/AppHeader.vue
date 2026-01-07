@@ -3,32 +3,37 @@ import { ref, computed } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useUserStore, useThemeStore } from "@/stores";
 import {
-    YouTubeBlackIcon,
-    GithubIcon,
-    SunIcon,
-    XIcon,
-    PersonIcon,
-    PersonIconFillLarge,
-    GearIcon,
-    BookmarkIcon,
-    SignInIcon,
-    SignOutIcon,
-    RocketIcon,
-    PlusIcon,
-    RepoIcon,
+  YouTubeBlackIcon,
+  GithubIcon,
+  SunIcon,
+  BookmarkIcon,
+  GearIcon,
+  PersonIcon,
+  PersonIconFillLarge,
+  RepoIcon,
+  RocketIcon,
+  SignInIcon,
+  SignOutIcon,
+  XIcon,
+  PlusIcon,
 } from "@/assets/icons";
 import { WebsiteIcon, LasLogo } from "@/assets";
-
+import { createSourceArticle } from '@/api';
 import { useToast } from "vue-toastification";
-import { useArticleStore } from "@/stores"
+import { useRoute } from "vue-router";
 
-const articleStore = useArticleStore();
+const route = useRoute();
 const toast = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 const themeStore = useThemeStore();
 const userInfo = computed(() => userStore.userInfo);
 const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo.avatar)
+
+const showPageHeader = computed(() => {
+  const last = route.matched[route.matched.length - 1]
+  return last?.meta?.showPageHeader === true
+})
 
 const isSidebarOpen = ref(false);
 function toggleSidebar() {
@@ -44,7 +49,7 @@ const loading = ref(false)
 async function createArticle() {
   loading.value = true
   try {
-    const response = await articleStore.create()
+    const response = await createSourceArticle()
     const id = response.data.id
     console.log("Article successfully created!")
     await router.push({
@@ -62,40 +67,55 @@ async function createArticle() {
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 z-50 w-full flex flex-row items-center justify-between gap-6 px-10 py-4 shadow-md backgrounds-auto no-select">
-    <div class="flex flex-row items-center gap-9">
+  <header
+      class="app-header header-backgrounds-auto"
+      :class="showPageHeader ? 'border-0' : 'border-b border-neutral-300'"
+  >
+    <div class="flex flex-row items-center gap-6">
       <router-link :to="{ name: 'home' }">
-        <WebsiteIcon class="w-auto h-10"/>
+        <WebsiteIcon class="w-8 h-auto"/>
       </router-link>
 
-      <a href="https://lazyalienserver.top/" target="_blank" rel="noopener" class="w-13">
+      <a href="https://lazyalienserver.top/" target="_blank" rel="noopener" class="w-9 h-auto">
         <LasLogo />
       </a>
     </div>
 
-    <div class="flex font-medium items-center gap-3">
+    <div class="flex flex-row font-medium items-center gap-2">
 
-      <div @click="createArticle" class="header-icon flex flex-row gap-x-1 font-semibold text-[16px]">
-        <PlusIcon class="w-6 h-6 fill-current" /> Create
+      <div @click="createArticle" class="header-icon group">
+        <PlusIcon class="w-5 h-5 fill-current" />
+        <span class="header-icon-tooltip">
+          Create
+        </span>
       </div>
 
-      <a href="https://www.youtube.com/@redstonevideotranslation5478" target="_blank" rel="noopener" class="header-icon">
-        <YouTubeBlackIcon class="w-6 h-6 fill-current" />
+      <a href="https://www.youtube.com/@redstonevideotranslation5478" target="_blank" rel="noopener" class="header-icon group">
+        <YouTubeBlackIcon class="w-5 h-5 fill-current" />
+        <span class="header-icon-tooltip">
+          Visit our YouTube
+        </span>
       </a>
 
-      <a href="https://github.com/LazyAlienServer" target="_blank" rel="noopener" class="header-icon">
-        <GithubIcon class="w-6 h-6 fill-current" />
+      <a href="https://github.com/LazyAlienServer" target="_blank" rel="noopener" class="header-icon group">
+        <GithubIcon class="w-5 h-5 fill-current" />
+        <span class="header-icon-tooltip">
+          Visit our GitHub
+        </span>
       </a>
 
-      <div @click="toggleTheme" class="header-icon">
-        <SunIcon class="w-6 h-6 fill-current" />
+      <div @click="toggleTheme" class="header-icon group">
+        <SunIcon class="w-5 h-5 fill-current" />
+        <span class="header-icon-tooltip">
+          Toggle theme
+        </span>
       </div>
 
       <img
           v-if="userInfo"
           :src="avatarUrl"
           alt="User Avatar"
-          class="w-10 h-10 rounded-full object-cover ml-4 border border-gray-300"
+          class="w-9 h-9 rounded-full object-cover ml-2 border border-gray-300"
           @click="toggleSidebar"
       />
 
@@ -118,6 +138,7 @@ async function createArticle() {
         class="fixed top-0 right-0 z-50 h-full w-80 rounded-l-3xl shadow-lg transform transition-transform duration-300 backgrounds-auto"
         :class="isSidebarOpen ? 'translate-x-0' : 'translate-x-full'"
     >
+
       <!-- If user has signed in -->
       <div v-if="userInfo">
         <div class="absolute top-0 right-0 mt-8 mr-9 p-1 rounded-md hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-[#2C2C2C]" @click="toggleSidebar">
@@ -141,19 +162,19 @@ async function createArticle() {
 
           <ul class="gap-y-3">
             <li>
-              <router-link to="/profile" class="sidebar-link" @click="toggleSidebar">
+              <router-link :to="{ name: 'profile', params: { username: userInfo.username } }" class="sidebar-link" @click="toggleSidebar">
                 <PersonIcon class="sidebar-icon" />
                 Profile
               </router-link>
-              <router-link to="/my-articles" class="sidebar-link" @click="toggleSidebar">
+              <router-link :to="{ name: 'my-articles' }" class="sidebar-link" @click="toggleSidebar">
                 <RepoIcon class="sidebar-icon" />
                 Articles
               </router-link>
-              <router-link to="/settings/appearance" class="sidebar-link" @click="toggleSidebar">
+              <router-link :to="{ name: 'appearance' }" class="sidebar-link" @click="toggleSidebar">
                 <GearIcon class="sidebar-icon" />
                 Settings
               </router-link>
-              <router-link to="/bookmarks" class="sidebar-link" @click="toggleSidebar">
+              <router-link :to="{ name: 'bookmarks' }" class="sidebar-link" @click="toggleSidebar">
                 <BookmarkIcon class="sidebar-icon" />
                 Bookmarks
               </router-link>
@@ -193,9 +214,7 @@ async function createArticle() {
               </router-link>
             </li>
           </ul>
-
         </div>
-
       </div>
 
     </div>

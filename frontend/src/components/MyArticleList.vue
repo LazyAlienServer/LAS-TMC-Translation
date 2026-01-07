@@ -1,30 +1,46 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { getMySourceArticles } from "@/api";
 import { MyArticleInfoCard } from "@/components";
+import { useRoute } from 'vue-router'
 
-const router = useRouter();
+const route = useRoute();
 
 const articles = ref([])
 
-onMounted(async() => {
-  const response = await getMySourceArticles()
-  articles.value = response.data
-  console.log("Load articles successfully!")
-})
+async function fetchArticles(query) {
+  try {
+    const response = await getMySourceArticles(query)
+    articles.value = response.data.results
+    console.log("Load articles successfully!")
+  } catch (error) {
+    console.log("Load articles failed", error)
+  }
+}
 
+watch(
+    () => route.query,
+    (newQuery) => {
+      fetchArticles(newQuery)
+    },
+    { deep: true, immediate: true }
+)
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-4 w-full h-135 overflow-y-auto">
+  <div class="flex flex-col w-full gap-y-3">
 
-    <MyArticleInfoCard
-        v-for="article in articles"
-        :key="article.id"
-        :article="article"
-    />
+    <p class="h-15 text-[25px] font-bold shrink-0">My Articles</p>
 
+    <div class="flex flex-col gap-y-4 h-125 overflow-y-auto pr-10">
+
+      <MyArticleInfoCard
+          v-for="article in articles"
+          :key="article.id"
+          :article="article"
+      />
+
+    </div>
   </div>
 </template>
 

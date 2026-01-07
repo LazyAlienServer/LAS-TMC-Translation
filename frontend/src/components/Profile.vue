@@ -12,7 +12,11 @@ const userInfo = computed(() => userStore.userInfo);
 
     <h2>Hello, {{ userInfo?.username }}!</h2>
 
-    <router-link :to="{ name: 'pending-articles' }" v-if="userInfo?.is_moderator">
+    <router-link
+        :to="{ name: 'pending-articles' }"
+        v-if="userInfo?.is_moderator"
+        class="link text-[20px] font-semibold"
+    >
       Moderate Articles
     </router-link>
 

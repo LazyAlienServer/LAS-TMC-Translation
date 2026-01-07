@@ -43,7 +43,7 @@ const routes = [
         meta: { title: 'Register' },
     },
     {
-        path: '/profile',
+        path: '/profile/:username',
         name: 'profile',
         component: views.ProfileView,
         meta: {
@@ -55,13 +55,13 @@ const routes = [
         path: '/videos',
         name: 'videos',
         component: views.VideosView,
-        meta: {title: 'Videos'},
+        meta: { title: 'Videos' },
     },
     {
         path: '/cookie-policy',
         name: 'cookie',
         component: views.CookiePolicyView,
-        meta: {title: 'Cookie Policy'},
+        meta: { title: 'Cookie Policy' },
     },
     {
         path: '/settings/appearance',
@@ -70,15 +70,6 @@ const routes = [
         meta: {
             requiresAuth: true,
             title: 'Appearance',
-        },
-    },
-    {
-        path: '/settings/language',
-        name: 'language',
-        component: views.LanguageSettingView,
-        meta: {
-            requiresAuth: true,
-            title: 'Language',
         },
     },
     {
@@ -109,12 +100,40 @@ const routes = [
         }
     },
     {
-        path: `/articles/:id/edit/`,
+        path: `/studio/articles/:id/edit/`,
         name: 'article-editor',
-        component: views.ArticleEditorView,
+        component: views.SourceArticleEditorView,
         meta: {
             requiresAuth: true,
             title: 'Article Editor',
+            showPageHeader: true,
+        }
+    },
+    {
+        path: `/studio/articles/:id/review/`,
+        name: 'article-review',
+        component: views.SourceArticleReviewView,
+        meta: {
+            requiresAuth: true,
+            title: 'Article Review',
+        }
+    },
+    {
+        path: `/articles/:id/`,
+        name: 'article-detail',
+        component: views.PublishedArticleDetailView,
+        meta: {
+            requiresAuth: true,
+            title: 'Article Detail',
+        }
+    },
+    {
+        path: `/articles/`,
+        name: 'article-list',
+        component: views.PublishedArticleListView,
+        meta: {
+            requiresAuth: true,
+            title: 'Article List',
         }
     },
     {

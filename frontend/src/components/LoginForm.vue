@@ -64,7 +64,7 @@ async function handleLogin() {
       />
     </div>
 
-    <button type="submit" :disabled="loading">
+    <button type="submit" :disabled="loading" class="form-btn">
       Sign in
     </button>
 

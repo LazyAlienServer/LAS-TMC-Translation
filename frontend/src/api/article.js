@@ -1,11 +1,14 @@
 import { api } from './axiosInstance'
 
-function getSourceArticles() {
-    return api.get('/article/source_articles/', { withCredentials: true });
-}
 
-function getMySourceArticles() {
-    return api.get('/article/source_articles/mine/', { withCredentials: true });
+function getMySourceArticles(query = undefined) {
+    return api.get(
+        '/article/source_articles/',
+        {
+            withCredentials: true,
+            params: query,
+        },
+    );
 }
 
 function getPendingArticles() {
@@ -34,7 +37,7 @@ function updateSourceArticle(id, title, content) {
 function submitArticle(id) {
     return api.post(
         `/article/article_actions/${id}/submit/`,
-        {article_id: id},
+        {},
         { withCredentials: true }
     );
 }
@@ -80,7 +83,6 @@ function deleteArticle(id) {
 }
 
 export {
-    getSourceArticles,
     getMySourceArticles,
     getPendingArticles,
     getTheSourceArticle,

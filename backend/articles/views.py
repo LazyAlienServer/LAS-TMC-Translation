@@ -2,9 +2,11 @@ from rest_framework import status
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters import rest_framework as filters
 
 from core.utils.drf.pagination import StandardPagination
 from core.utils.drf.permissions import is_moderator
+from .filters import SourceArticleFilter
 from .permissions import (
     SourceArticlePermission,
     PublishedArticlePermission,
@@ -29,12 +31,23 @@ from .services.articles import (
 class SourceArticleViewSet(ModelViewSet):
     permission_classes = (SourceArticlePermission,)
     queryset = SourceArticle.objects.select_related("author")
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = SourceArticleFilter
 
     def get_serializer_class(self):
         # Author - Write Serializer | Moderators - Read Serializer
         if self.action in ('create', 'update', 'partial_update'):
             return SourceArticleWriteSerializer
         return SourceArticleReadSerializer
+
+    def get_queryset(self):
+        # Only authors can see his/her articles
+        user = self.request.user
+        queryset = super().get_queryset()
+
+        if not user or user.is_anonymous:
+            return queryset.none()
+        return queryset.filter(author=user)
 
     def create(self, request, *args, **kwargs):
         input_serializer = SourceArticleWriteSerializer(
@@ -50,23 +63,6 @@ class SourceArticleViewSet(ModelViewSet):
             context=self.get_serializer_context(),
         )
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=['get'])
-    def mine(self, request):
-        """
-        Only return the current user's articles
-        """
-        queryset = SourceArticle.objects.select_related("author").filter(author=self.request.user)
-
-        # page = self.paginate_queryset(queryset)
-        #
-        # # return data depends on whether a pagination is required in the request
-        # if page is not None:
-        #     serializer = self.get_serializer(page, many=True)
-        #     return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
 
 class PublishedArticleViewSet(ReadOnlyModelViewSet):
@@ -112,7 +108,6 @@ class ArticleActionViewset(GenericViewSet):
         input_serializer = ArticleActionInputSerializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
 
-        # TODO: 让serializer从路由里面拿id，我现在暂时在请求体当中放入了id
         result = submit(
             article_id=pk,
             actor=request.user,

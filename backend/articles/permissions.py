@@ -46,5 +46,3 @@ class ArticleEventPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.method in permissions.SAFE_METHODS and (is_moderator(request.user) or is_the_author(request.user, obj.article))
-
-    # TODO: 还要改

@@ -141,7 +141,6 @@ class ArticleActionInputSerializer(serializers.Serializer):
     The input serializer for all article actions,
     which include submit, approve, reject, unpublish and delete
     """
-    article_id = serializers.UUIDField(required=True)
     annotation = serializers.CharField(required=False, allow_blank=True)
 
 

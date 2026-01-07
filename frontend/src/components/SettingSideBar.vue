@@ -6,11 +6,11 @@ import { RouterLink } from "vue-router";
 
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
-const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo.avatar)
+const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.userInfo?.avatar)
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 mr-15 h-auto gap-y-6 w-70">
+  <div class="flex flex-col gap-2 mr-15 h-auto gap-y-6 w-1/5">
 
     <div class="flex flex-row items-center gap-3">
 
@@ -21,8 +21,8 @@ const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.u
       />
 
       <div class="flex flex-col mb-0.5">
-        <p class="text-[22px] font-semibold">{{ userInfo.username }}</p>
-        <p class="text-[12px] ml-0.5 text-gray-600 dark:text-gray-200">{{ userInfo.email }}</p>
+        <p class="text-[22px] font-semibold">{{ userInfo?.username }}</p>
+        <p class="text-[12px] ml-0.5 text-gray-600 dark:text-gray-200">{{ userInfo?.email }}</p>
       </div>
 
     </div>
@@ -32,10 +32,6 @@ const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.u
       <router-link to="/settings/appearance" class="sidebar-link">
         <PaintBrushIcon class="sidebar-icon" />
         Appearance
-      </router-link>
-      <router-link to="/settings/language" class="sidebar-link">
-        <LanguageIcon class="sidebar-icon" />
-        Language
       </router-link>
 
     </div>

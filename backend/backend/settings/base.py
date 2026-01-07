@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     # 3rd-party Apps
     "rest_framework",
     "django_celery_beat",
+    "django_filters",
 ]
 
 AUTH_USER_MODEL = "profiles.Profile"

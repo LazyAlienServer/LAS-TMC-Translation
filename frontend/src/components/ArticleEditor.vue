@@ -1,51 +1,166 @@
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
+import { StarterKit } from '@tiptap/starter-kit'
+import { Highlight } from "@tiptap/extension-highlight";
+import { Superscript } from '@tiptap/extension-superscript';
+import { Subscript } from '@tiptap/extension-subscript';
+import { TextAlign } from '@tiptap/extension-text-align';
+import { Mathematics } from '@tiptap/extension-mathematics';
+import { TaskItem, TaskList } from '@tiptap/extension-list';
+import { Placeholder } from '@tiptap/extensions';
+import { Image } from '@tiptap/extension-image';
+import { FileHandler } from '@tiptap/extension-file-handler'
+import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import { useArticleStore } from '@/stores';
-import { getTheSourceArticle } from "@/api";
+import { getTheSourceArticle, submitArticle, updateSourceArticle, deleteArticle } from "@/api";
+import { EditorToolBar } from "@/components";
 
-const toast = useToast();
+const route = useRoute();
 const router = useRouter();
-const articleStore = useArticleStore();
+const toast = useToast();
 
+const id = ref(null)
 const title = ref(null)
 const content = ref(null)
 
-const loading = ref(false);
-
 const title_editor = useEditor({
   content: '',
-  extensions: [StarterKit],
+  onUpdate: () => emit('update'),
+  extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'What is your title?',
+      }),
+  ],
 })
 
 const content_editor = useEditor({
   content: '',
-  extensions: [StarterKit],
+  onUpdate: () => emit('update'),
+  extensions: [
+      StarterKit.configure({
+        link: {
+          openOnClick: true,
+          autolink: true,
+          defaultProtocol: 'https',
+          linkOnPaste: true,
+          HTMLAttributes: {
+            class: 'link',
+            rel: 'noopener noreferrer',
+            target: '_blank',
+          },
+        },
+        heading: {
+          levels: [1, 2, 3],
+        },
+      }),
+      TaskList,
+      TaskItem.configure({
+        nested: false,
+      }),
+      Superscript,
+      Subscript,
+      Highlight,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Mathematics.configure({
+        blockOptions: {
+          onClick: (node, pos) => {
+            const newCalculation = prompt('Enter new calculation:', node.attrs.latex)
+            if (newCalculation) {
+              const editor = content_editor.value
+              editor.chain().setNodeSelection(pos).updateBlockMath({ latex: newCalculation }).focus().run()
+            }
+          },
+        },
+        inlineOptions: {
+          onClick: (node, pos) => {
+            const editor = content_editor.value
+            const newCalculation = prompt('Enter new calculation:', node.attrs.latex)
+            if (newCalculation) {
+              editor.chain().setNodeSelection(pos).updateInlineMath({ latex: newCalculation }).focus().run()
+            }
+          },
+        },
+      }),
+      Placeholder.configure({
+        placeholder: 'Write something for everyone and yourself...',
+      }),
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+      }),
+      FileHandler.configure({
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+        onDrop: (currentEditor, files, pos) => {
+          files.forEach(file => {
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+              currentEditor
+                  .chain()
+                  .insertContentAt(pos, {
+                    type: 'image',
+                    attrs: {
+                      src: fileReader.result,
+                    },
+                  })
+                  .focus()
+                  .run()
+            }
+          })
+        },
+        onPaste: (currentEditor, files) => {
+          files.forEach(file => {
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+              currentEditor
+                  .chain()
+                  .insertContentAt(currentEditor.state.selection.anchor, {
+                    type: 'image',
+                    attrs: {
+                      src: fileReader.result,
+                    },
+                  })
+                  .focus()
+                  .run()
+            }
+          })
+        },
+      }),
+  ],
 })
 
 onMounted(async () => {
-  const response = await getTheSourceArticle(articleStore.currentId)
+  const response = await getTheSourceArticle(route.params.id)
 
+  id.value = response.data.id
   title.value = response.data.title
   content.value = response.data.content
 
   title_editor.value.commands.setContent(title.value)
   content_editor.value.commands.setContent(content.value)
+  emit('hydration-done')
 })
+
+const loading = ref(false);
+const emit = defineEmits(['update', 'hydration-done', 'saved'])
 
 async function handleSave() {
   loading.value = true;
 
-  const title = title_editor.value.getText().trim();
-  const content = content_editor.value.getJSON();
+  const titleText = title_editor.value.getText().trim();
+  const contentJSON = content_editor.value.getJSON();
 
   try {
-    await articleStore.update(title, content)
-    toast.success("Article saved successfully!");
-    await router.push({ name: 'my-articles' });
+    await updateSourceArticle(id.value, titleText, contentJSON)
+    toast.success("Article Saved!");
+    emit('saved')
 
   } catch (error) {
     toast.error(error.response?.data?.toast_error);
@@ -55,30 +170,69 @@ async function handleSave() {
     loading.value = false;
   }
 }
+
+async function handleSubmit() {
+  loading.value = true;
+
+  try {
+    await submitArticle(id.value);
+    toast.success("Article submitted successfully!");
+    await router.push({ name: 'my-articles' });
+
+  } catch (error) {
+    toast.error(error.response?.data?.toast_error);
+    console.error("Failed to submit the article", error);
+
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleDelete() {
+  loading.value = true;
+
+  try {
+    await deleteArticle(id.value);
+    toast.success("Article deleted successfully!");
+    await router.push({ name: 'my-articles' });
+
+  } catch (error) {
+    toast.error(error.response?.data?.toast_error);
+    console.error("Failed to delete the article", error);
+
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
-<style>
-  .editor-title .ProseMirror {
-    outline: none;
-  }
-  .editor-content .ProseMirror {
-    outline: none;
-    min-height: 200px;
-  }
-</style>
-
 <template>
-  <div class="col-body-container">
+  <Teleport to="#page-header-center">
+    <EditorToolBar
+        v-if="content_editor"
+        :editor="content_editor"
+        :loading="loading"
+        @save="handleSave"
+        @submit="handleSubmit"
+        @delete="handleDelete"
+    />
+  </Teleport>
 
-    <div class="editor-title border rounded-lg p-3 bg-white text-black">
-      <EditorContent :editor="title_editor"/>
-    </div>
-    <div class="editor-content border rounded-lg p-3 bg-white text-black">
-      <EditorContent :editor="content_editor"/>
+  <div class="col-body-container items-center">
+
+    <div class="flex flex-col px-3 py-5 mb-5 gap-y-5 w-3/4 shadow-md flex-1">
+
+      <div class="editor-title rounded-lg p-3 bg-gray-200/60 text-light w-full">
+        <EditorContent v-if="title_editor" :editor="title_editor"/>
+      </div>
+
+      <hr>
+
+      <div class="editor-content p-3 text-light">
+        <EditorContent v-if="content_editor" :editor="content_editor"/>
+      </div>
+
     </div>
 
-    <button type="button" @click="handleSave()" :disabled="loading">
-      Save Draft
-    </button>
   </div>
 </template>

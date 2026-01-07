@@ -63,7 +63,7 @@ async function handleUsernameUpdate() {
 </script>
 
 <template>
-  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full w-70">
+  <div v-if="userInfo" class="flex flex-col gap-5 mr-15 mt-3 h-full w-1/5">
     <div class="flex flex-col gap-y-7 items-center relative">
 
       <img
@@ -101,8 +101,22 @@ async function handleUsernameUpdate() {
       />
 
       <div class="flex flex-row items-center gap-3">
-        <button @click="handleUsernameUpdate" :disabled="loading">Save</button>
-        <button @click="toggleInput" :disabled="loading" class="bg-gray-400 hover:bg-gray-500">Cancel</button>
+
+        <button
+            @click="handleUsernameUpdate"
+            :disabled="loading"
+            class="form-btn"
+        >
+          Save
+        </button>
+        <button
+            @click="toggleInput"
+            :disabled="loading"
+            class="bg-gray-400 hover:bg-gray-500 form-btn"
+        >
+          Cancel
+        </button>
+
       </div>
 
     </div>

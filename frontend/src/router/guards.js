@@ -1,9 +1,8 @@
-import { useUserStore, useArticleStore } from "@/stores";
+import { useUserStore } from "@/stores";
 
 
 async function globalBeforeEach(to) {
     const userStore = useUserStore();
-    const articleStore = useArticleStore();
 
     const isLoggedIn = userStore.isLoggedIn;
 
@@ -17,10 +16,6 @@ async function globalBeforeEach(to) {
 
     if (to.meta.title) {
         document.title = to.meta.title;
-    }
-
-    if (to.name === 'article-editor' && to.params.id) {
-        articleStore.switchArticle(to.params.id)
     }
 }
 

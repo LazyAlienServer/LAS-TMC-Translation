@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import App from './App.vue'
 import router from "@/router";
 import "@/assets/css/app.css"
+import "@/assets/css/article.css"
 import { setupGlobalErrorHandler } from "@/utils";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
