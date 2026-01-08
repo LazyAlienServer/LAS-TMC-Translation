@@ -1,13 +1,14 @@
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import { createPinia } from "pinia";
-import App from './App.vue'
+import App from './App.vue';
 import router from "@/router";
-import "@/assets/css/app.css"
-import "@/assets/css/article.css"
+import "@/assets/css/app.css";
+import "@/assets/css/article.css";
+import "@/assets/css/modal.css";
 import { setupGlobalErrorHandler } from "@/utils";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import { useThemeStore, useUserStore } from "@/stores";
+import { useThemeStore, useUserStore } from "@/features/user/stores";
 
 
 const app = createApp(App);

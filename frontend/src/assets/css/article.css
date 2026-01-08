@@ -39,7 +39,7 @@
     }
     .editor-actions-dropdown {
         @apply absolute
-        flex flex-col right-0 top-full mt-1 w-38 p-2 z-10
+        flex flex-col right-0 top-full mt-1 w-32 p-2 z-10
         rounded-xl border border-gray-200 bg-white shadow
     }
     .editor-actions-dropdown-btn {
@@ -167,5 +167,10 @@
         float: left;
         pointer-events: none;
         height: 0;
+    }
+    /* Youtube embed */
+    div[data-youtube-video] iframe {
+        @apply block min-h-[200px] min-w-[200px] outline-transparent rounded-md
+        border-6 border-gray-900;
     }
 }

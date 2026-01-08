@@ -32,10 +32,10 @@ import PaintBrushIcon from './paintbrush-16.svg';
 import DiscordIcon from './discord-black.svg';
 import LanguageIcon from './language.svg';
 import YouTubeBlackIcon from './youtube-black.svg';
-import YouTubeColorIcon from './youtube-color.svg';
 import PlusIcon from './plus-16.svg';
 import BookIcon from './book-16.svg';
 import RepoIcon from './repo-16.svg';
+import TriangleDownIcon from './triangle-down-16.svg';
 
 export {
     BookmarkIcon,
@@ -72,8 +72,8 @@ export {
     DiscordIcon,
     LanguageIcon,
     YouTubeBlackIcon,
-    YouTubeColorIcon,
     PlusIcon,
     BookIcon,
     RepoIcon,
+    TriangleDownIcon,
 }

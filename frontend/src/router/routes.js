@@ -13,18 +13,6 @@ const routes = [
         meta: { title: 'Home' },
     },
     {
-        path: '/contact-us',
-        name: 'contact',
-        component: views.ContactView,
-        meta: { title: 'Contact Us' },
-    },
-    {
-        path: '/donate',
-        name: 'donate',
-        component: views.DonateView,
-        meta: { title: 'Donate' },
-    },
-    {
         path: '/login',
         name: 'login',
         component: views.LoginView,
@@ -52,19 +40,13 @@ const routes = [
         },
     },
     {
-        path: '/videos',
-        name: 'videos',
-        component: views.VideosView,
-        meta: { title: 'Videos' },
-    },
-    {
         path: '/cookie-policy',
         name: 'cookie',
         component: views.CookiePolicyView,
         meta: { title: 'Cookie Policy' },
     },
     {
-        path: '/settings/appearance',
+        path: '/profile/settings/appearance',
         name: 'appearance',
         component: views.AppearanceSettingView,
         meta: {
@@ -73,16 +55,7 @@ const routes = [
         },
     },
     {
-      path: '/bookmarks',
-      name: 'bookmarks',
-      component: views.BookmarksView,
-      meta: {
-          requiresAuth: true,
-          title: 'Bookmarks'
-      },
-    },
-    {
-        path: `/my-articles`,
+        path: `/studio/my-articles`,
         name: 'my-articles',
         component: views.MyArticleListView,
         meta: {
@@ -139,7 +112,7 @@ const routes = [
     {
         path: '/:pathMatch(.*)*',
         name: '404',
-        component: () => import("@/views/NotFoundView.vue"),
+        component: () => import("@/views/misc/NotFoundView.vue"),
         meta: {title: '404'},
     },
 ]

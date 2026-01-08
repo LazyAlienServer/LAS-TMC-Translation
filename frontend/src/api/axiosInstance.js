@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useUserStore } from "@/stores/useUserStore";
+import { useUserStore } from "@/features/user/stores/useUserStore";
 import { getRefreshToken } from '@/utils'
 
 const api = axios.create({
@@ -93,7 +93,7 @@ api.interceptors.response.use(
 );
 
 
-// for requests outside the auth system
+// for requests outside the user system
 const apiBare = axios.create({
     baseURL: '/api/v1',
     timeout: 10000,

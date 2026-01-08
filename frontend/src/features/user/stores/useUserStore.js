@@ -1,0 +1,82 @@
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { loginUser, getUserProfile, refreshUserLoginToken } from "@/features/user/api";
+import { setRefreshToken, getRefreshToken, removeRefreshToken } from "@/utils";
+
+export const useUserStore = defineStore('user', () => {
+    /* states */
+    const accessToken = ref(null);
+    const userInfo = ref(null);
+    const isLoggedIn = computed(() => !!accessToken.value);
+
+
+    /* Tools */
+    const refreshTimer = ref(null);
+
+    function scheduleTokenRefresh(expiresInSeconds) {
+        // 可能有问题
+        clearTimeout(refreshTimer);
+        const refreshDelay = (expiresInSeconds - 60) * 1000;
+
+        refreshTimer.value = setTimeout(() => {
+            refreshAccessToken()
+                .then(() => {console.log("Access token successfully refreshed!")})
+                .catch((error) => {console.warn(error);})
+        }, refreshDelay);
+    }
+
+    /* actions */
+    async function loadUserInfo() {
+        const response = await getUserProfile();
+
+        userInfo.value = response.data;
+    }
+
+    async function login(email, password) {
+        const response = await loginUser(email, password);
+
+        accessToken.value = response.data.access;
+
+        localStorage.setItem("accessToken", accessToken.value);
+        setRefreshToken(response.data.refresh, parseInt(response.data.refresh_token_lifetime));
+
+        await loadUserInfo();
+
+        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
+    }
+
+    async function refreshAccessToken() {
+        const response = await refreshUserLoginToken(getRefreshToken());
+
+        accessToken.value = response.data.access;
+        localStorage.setItem('accessToken', accessToken.value);
+
+        scheduleTokenRefresh(parseInt(response.data.access_token_lifetime));
+    }
+
+    function logout() {
+        clearTimeout(refreshTimer.value);
+
+        accessToken.value = null;
+        userInfo.value = null;
+
+        localStorage.removeItem("accessToken");
+        removeRefreshToken();
+    }
+
+    async function initUser() {
+        accessToken.value = localStorage.getItem('accessToken');
+
+        await loadUserInfo();
+    }
+
+    return {
+        accessToken,
+        userInfo,
+        isLoggedIn,
+        login,
+        logout,
+        refreshAccessToken,
+        initUser,
+    };
+});

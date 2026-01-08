@@ -60,6 +60,11 @@ class SourceArticleWriteSerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
+    def validate_title(self, value):
+        if value is not None and value.strip() == "":
+            return "Untitled"
+        return value
+
 
 class PublishedArticleSerializer(serializers.ModelSerializer):
     """

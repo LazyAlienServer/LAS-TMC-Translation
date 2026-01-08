@@ -1,5 +1,5 @@
 import { sendLogToServer } from '@/api';
-import { useUserStore } from "@/stores";
+import { useUserStore } from "@/features/user/stores";
 
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];

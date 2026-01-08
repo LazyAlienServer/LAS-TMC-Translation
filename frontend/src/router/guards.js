@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores";
+import { useUserStore } from "@/features/user/stores";
 
 
 async function globalBeforeEach(to) {
