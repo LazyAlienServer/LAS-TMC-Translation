@@ -1,8 +1,4 @@
 import * as views from "@/views";
-/*
-Import all views in @/views.
-Be careful when using this import syntax in other files, as it import everything without explicit names.
-*/
 
 
 const routes = [
@@ -15,25 +11,25 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: views.LoginView,
+        component: () => import("@/views/user/LoginView.vue"),
         meta: { title: 'Login' },
     },
     {
         path: '/logout',
         name: 'logout',
-        component: views.LogoutView,
+        component: () => import("@/views/user/LogoutView.vue"),
         meta: { title: 'Logout' },
     },
     {
         path: '/register',
         name: 'register',
-        component: views.RegisterView,
+        component: () => import("@/views/user/RegisterView.vue"),
         meta: { title: 'Register' },
     },
     {
         path: '/profile/:username',
         name: 'profile',
-        component: views.ProfileView,
+        component: () => import("@/views/user/ProfileView.vue"),
         meta: {
             requiresAuth: true,
             title: 'Profile',
@@ -42,13 +38,13 @@ const routes = [
     {
         path: '/cookie-policy',
         name: 'cookie',
-        component: views.CookiePolicyView,
+        component: () => import("@/views/static/CookiePolicyView.vue"),
         meta: { title: 'Cookie Policy' },
     },
     {
         path: '/profile/settings/appearance',
         name: 'appearance',
-        component: views.AppearanceSettingView,
+        component: () => import("@/views/user/AppearanceSettingView.vue"),
         meta: {
             requiresAuth: true,
             title: 'Appearance',
@@ -57,7 +53,7 @@ const routes = [
     {
         path: `/studio/my-articles`,
         name: 'my-articles',
-        component: views.MyArticleListView,
+        component: () => import("@/views/articles/MyArticleListView.vue"),
         meta: {
             requiresAuth: true,
             title: 'My Articles',
@@ -66,7 +62,7 @@ const routes = [
     {
         path: `/pending-articles`,
         name: 'pending-articles',
-        component: views.PendingArticleListView,
+        component: () => import("@/views/articles/PendingArticleListView.vue"),
         meta: {
             requiresAuth: true,
             title: 'Pending Articles',
@@ -75,7 +71,7 @@ const routes = [
     {
         path: `/studio/articles/:id/edit/`,
         name: 'article-editor',
-        component: views.SourceArticleEditorView,
+        component: () => import("@/views/articles/SourceArticleEditorView.vue"),
         meta: {
             requiresAuth: true,
             title: 'Article Editor',
@@ -85,28 +81,28 @@ const routes = [
     {
         path: `/studio/articles/:id/review/`,
         name: 'article-review',
-        component: views.SourceArticleReviewView,
+        component: () => import("@/views/articles/SourceArticleReviewView.vue"),
         meta: {
             requiresAuth: true,
             title: 'Article Review',
         }
     },
     {
-        path: `/articles/:id/`,
-        name: 'article-detail',
-        component: views.PublishedArticleDetailView,
+        path: `/articles/`,
+        name: 'article-list',
+        component: () => import("@/views/articles/PublishedArticleListView.vue"),
         meta: {
             requiresAuth: true,
-            title: 'Article Detail',
+            title: 'Published Articles',
         }
     },
     {
-        path: `/articles/`,
-        name: 'article-list',
-        component: views.PublishedArticleListView,
+        path: `/articles/:id/`,
+        name: 'article-detail',
+        component: () => import("@/views/articles/PublishedArticleDetailView.vue"),
         meta: {
             requiresAuth: true,
-            title: 'Article List',
+            title: 'Article Detail',
         }
     },
     {

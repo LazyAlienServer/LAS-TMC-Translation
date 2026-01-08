@@ -1,4 +1,4 @@
-import { api, apiBare } from '../../../api/axiosInstance'
+import { api, apiBare } from '@/api'
 
 function registerUser(email, password, confirmPassword) {
     return apiBare.post('/user/register/', {

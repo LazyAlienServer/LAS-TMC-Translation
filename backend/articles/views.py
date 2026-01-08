@@ -17,6 +17,7 @@ from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEve
 from .serializers import (
     SourceArticleReadSerializer,
     SourceArticleWriteSerializer,
+    ImageUploadSerializer,
     PublishedArticleSerializer,
     ArticleSnapshotSerializer,
     ArticleEventSerializer,
@@ -63,6 +64,15 @@ class SourceArticleViewSet(ModelViewSet):
             context=self.get_serializer_context(),
         )
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'], url_path='upload_article_image')
+    def upload_article_image(self, request):
+        serializer = ImageUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = serializer.save()
+
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class PublishedArticleViewSet(ReadOnlyModelViewSet):

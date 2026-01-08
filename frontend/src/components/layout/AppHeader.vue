@@ -6,7 +6,6 @@ import {
   YouTubeBlackIcon,
   GithubIcon,
   SunIcon,
-  BookmarkIcon,
   GearIcon,
   PersonIcon,
   PersonIconFillLarge,

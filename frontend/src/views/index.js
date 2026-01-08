@@ -1,14 +1,1 @@
 export { default as HomeView } from './home/HomeView.vue';
-export { default as LoginView } from './user/LoginView.vue';
-export { default as LogoutView } from './user/LogoutView.vue';
-export { default as RegisterView } from './user/RegisterView.vue';
-export { default as ProfileView } from './user/ProfileView.vue';
-export { default as CookiePolicyView } from './static/CookiePolicyView.vue';
-export { default as AppearanceSettingView } from './user/AppearanceSettingView.vue';
-export { default as NotFoundView } from './misc/NotFoundView.vue';
-export { default as SourceArticleEditorView } from './articles/SourceArticleEditorView.vue';
-export { default as SourceArticleReviewView } from './articles/SourceArticleReviewView.vue';
-export { default as MyArticleListView } from './articles/MyArticleListView.vue';
-export { default as PendingArticleListView } from './articles/PendingArticleListView.vue';
-export { default as PublishedArticleDetailView } from './articles/PublishedArticleDetailView.vue';
-export { default as PublishedArticleListView } from './articles/PublishedArticleListView.vue';

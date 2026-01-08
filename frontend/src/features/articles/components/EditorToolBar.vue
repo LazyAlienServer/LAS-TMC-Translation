@@ -37,9 +37,12 @@ import {
   FlameKindling,
 } from 'lucide-vue-next'
 import { RouterLink } from "vue-router";
-import { BaseModal } from '@/components/base'
+import { BaseModal } from '@/components/base';
+import { uploadArticleImage } from "@/features/articles/api";
+import { useToast } from "vue-toastification";
 
-const open = ref(false)
+const toast = useToast();
+const open = ref(false);
 
 const props = defineProps({
   editor: {
@@ -80,18 +83,15 @@ function setLink() {
   const previousUrl = props.editor.getAttributes('link').href
   const url = window.prompt('Please enter the URL:', previousUrl)
 
-  // cancelled
   if (url === null) {
     return
   }
 
-  // empty
   if (url === '') {
     props.editor.chain().focus().extendMarkRange('link').unsetLink().run()
     return
   }
 
-  // update link
   props.editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 }
 
@@ -184,47 +184,46 @@ onBeforeUnmount(() => {
 })
 
 // Add Image Button
+async function handleImageUpload(editor, files) {
+  for (const file of files) {
+    if (!file.type.startsWith('image/')) continue
+
+    const MAX = 4 * 1024 * 1024
+    if (file.size > MAX) {
+      toast.error('Image upload failed')
+      continue
+    }
+
+    const formData = new FormData()
+    formData.append('image', file)
+
+    try {
+      const response = await uploadArticleImage(formData)
+      const url = response.data.url
+      const imageUrl =  import.meta.env.VITE_API_BASE_URL + url
+
+      editor.chain().focus().setImage({ src: imageUrl, alt: file.name }).run()
+
+    } catch (error) {
+      console.error('Image upload failed', error)
+      toast.error('Image upload failed')
+    }
+  }
+}
+
 const fileInputRef = ref(null)
-
-function openFilePicker() {
-  fileInputRef.value?.click()
-}
-
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result) // data URL string
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
-}
 
 async function onPickFile(event) {
   const file = event.target.files?.[0]
   if (!file) return
 
-  // Only image is allowed
-  if (!file.type?.startsWith('image/')) {
-    alert('Please select an image file.')
-    event.target.value = ''
-    return
-  }
+  event.target.value = ''
 
-  // Size limit 2MB
-  const MAX = 2 * 1024 * 1024
-  if (file.size > MAX) {
-    alert('Image too large (max 2MB).')
-    event.target.value = ''
-    return
-  }
+  await handleImageUpload(props.editor, [file])
+}
 
-  try {
-    const dataUrl = await fileToDataUrl(file)
-
-    props.editor.chain().focus().setImage({ src: dataUrl, alt: file.name }).run()
-  } finally {
-    event.target.value = ''
-  }
+function openFilePicker() {
+  fileInputRef.value?.click()
 }
 
 // YouTube Button
@@ -589,7 +588,7 @@ function addVideo() {
         <input
             ref="fileInputRef"
             type="file"
-            accept="image/*"
+            accept=".jpg, .jpeg, .png, .webp"
             class="hidden"
             @change="onPickFile"
         />

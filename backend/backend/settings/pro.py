@@ -26,3 +26,5 @@ CACHES = {
         "KEY_PREFIX": "pro",
     }
 }
+
+SITE_URL = env("PRO_SITE_URL")

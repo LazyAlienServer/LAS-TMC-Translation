@@ -7,7 +7,7 @@ import { Subscript } from '@tiptap/extension-subscript';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { Mathematics } from '@tiptap/extension-mathematics';
 import { TaskItem, TaskList } from '@tiptap/extension-list';
-import { Placeholder } from '@tiptap/extensions';
+import { Placeholder, CharacterCount } from '@tiptap/extensions';
 import { Image } from '@tiptap/extension-image';
 import { FileHandler } from '@tiptap/extension-file-handler';
 import { Youtube } from '@tiptap/extension-youtube';
@@ -16,6 +16,7 @@ import { useToast } from "vue-toastification";
 import { onMounted, ref } from "vue";
 import { getTheSourceArticle, submitArticle, updateSourceArticle, deleteArticle } from "@/features/articles/api";
 import { EditorToolBar } from "@/features/articles/components";
+import { uploadArticleImage } from '@/features/articles/api'
 
 const route = useRoute();
 const router = useRouter();
@@ -25,6 +26,33 @@ const id = ref(null)
 const title = ref(null)
 const content = ref(null)
 
+async function handleImageUpload(editor, files) {
+  for (const file of files) {
+    if (!file.type.startsWith('image/')) continue
+
+    const MAX = 4 * 1024 * 1024
+    if (file.size > MAX) {
+      toast.error('Image upload failed')
+      continue
+    }
+
+    const formData = new FormData()
+    formData.append('image', file)
+
+    try {
+      const response = await uploadArticleImage(formData)
+      const url = response.data.url
+      const imageUrl =  import.meta.env.VITE_API_BASE_URL + url
+
+      editor.chain().focus().setImage({ src: imageUrl, alt: file.name }).run()
+
+    } catch (error) {
+      console.error('Image upload failed', error)
+      toast.error('Image upload failed')
+    }
+  }
+}
+
 const title_editor = useEditor({
   content: '',
   onUpdate: () => emit('update'),
@@ -33,6 +61,7 @@ const title_editor = useEditor({
       Placeholder.configure({
         placeholder: 'What is your title?',
       }),
+      CharacterCount,
   ],
 })
 
@@ -91,47 +120,16 @@ const content_editor = useEditor({
       }),
       Image.configure({
         inline: false,
-        allowBase64: true,
+        allowBase64: false,
       }),
       FileHandler.configure({
-        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-        onDrop: (currentEditor, files, pos) => {
-          files.forEach(file => {
-            const fileReader = new FileReader()
-
-            fileReader.readAsDataURL(file)
-            fileReader.onload = () => {
-              currentEditor
-                  .chain()
-                  .insertContentAt(pos, {
-                    type: 'image',
-                    attrs: {
-                      src: fileReader.result,
-                    },
-                  })
-                  .focus()
-                  .run()
-            }
-          })
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
+        async onPaste(editor, files) {
+          await handleImageUpload(editor, files)
         },
-        onPaste: (currentEditor, files) => {
-          files.forEach(file => {
-            const fileReader = new FileReader()
 
-            fileReader.readAsDataURL(file)
-            fileReader.onload = () => {
-              currentEditor
-                  .chain()
-                  .insertContentAt(currentEditor.state.selection.anchor, {
-                    type: 'image',
-                    attrs: {
-                      src: fileReader.result,
-                    },
-                  })
-                  .focus()
-                  .run()
-            }
-          })
+        async onDrop(editor, files) {
+          await handleImageUpload(editor, files)
         },
       }),
       Youtube.configure({

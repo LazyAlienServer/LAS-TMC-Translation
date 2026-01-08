@@ -4,9 +4,14 @@ from django.contrib.auth.models import BaseUserManager
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import filepath_to_uri
 from django.conf import settings
-from django.utils import timezone
 
+import uuid
+from pathlib import Path
 from urllib.parse import urljoin
+
+
+def avatar_upload_to(instance, filename):
+    return str(Path("avatars") / str(instance.username) / f"{uuid.uuid4().hex}.webp")
 
 
 class AvatarStorage(FileSystemStorage):
@@ -51,7 +56,7 @@ class Profile(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to=avatar_upload_to,
         blank=True,
         null=True,
         storage=AvatarStorage()

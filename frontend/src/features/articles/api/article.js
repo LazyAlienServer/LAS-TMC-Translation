@@ -1,4 +1,4 @@
-import { api } from '../../../api/axiosInstance'
+import { api } from '@/api'
 
 
 function getMySourceArticles(query = undefined) {
@@ -82,6 +82,18 @@ function deleteArticle(id) {
     );
 }
 
+function uploadArticleImage(formData) {
+
+    return api.post(
+        `/article/source_articles/upload_article_image/`,
+        formData,
+        {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true,
+        }
+    )
+}
+
 export {
     getMySourceArticles,
     getPendingArticles,
@@ -94,4 +106,5 @@ export {
     rejectArticle,
     unpublishArticle,
     deleteArticle,
+    uploadArticleImage
 }

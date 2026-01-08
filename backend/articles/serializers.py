@@ -1,12 +1,21 @@
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.utils import timezone
 
 from rest_framework import serializers
 from rest_framework.request import Request
 
-from core.utils.drf.validators import RequiredValidator, LengthValidator
+from core.utils.drf.validators import (
+    RequiredValidator, LengthValidator, FileTypeValidator, FileSizeValidator
+)
 from core.utils.drf.permissions import is_moderator
 from .models import SourceArticle, PublishedArticle, ArticleSnapshot, ArticleEvent
 
+import uuid
+import io
+from PIL import Image
+from pathlib import Path
 
 User = get_user_model()
 
@@ -63,7 +72,40 @@ class SourceArticleWriteSerializer(serializers.ModelSerializer):
     def validate_title(self, value):
         if value is not None and value.strip() == "":
             return "Untitled"
+
         return value
+
+
+class ImageUploadSerializer(serializers.Serializer):
+    image = serializers.ImageField(
+        validators=[
+            FileSizeValidator(object_display_name="image", max_size_mb=4),
+            FileTypeValidator(object_display_name="image")
+        ]
+    )
+
+    def create(self, validated_data):
+        image = validated_data['image']
+
+        image = Image.open(image)
+        image = image.convert("RGB")
+        image.thumbnail((1600, 1600))
+        buffer = io.BytesIO()
+        image.save(buffer, format="WEBP", quality=85)
+        webp_file = ContentFile(buffer.getvalue())
+
+        file_name = f"{uuid.uuid4().hex}.webp"
+        rel_dir = Path('article_images') / str(timezone.now().year) / f"{timezone.now().month:02d}"
+        rel_path = str(rel_dir / file_name)
+
+        saved_path = default_storage.save(rel_path, webp_file)
+        url = default_storage.url(saved_path)
+
+        return {
+            'url': url,
+            "path": saved_path,
+            "name": Path(saved_path).name,
+        }
 
 
 class PublishedArticleSerializer(serializers.ModelSerializer):

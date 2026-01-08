@@ -22,7 +22,7 @@ onBeforeUnmount(() => {
 
 onBeforeRouteLeave(() => {
   if (!isDirty.value) return true
-  return window.confirm('Changes will not be saved. Leave this static?')
+  return window.confirm('Changes will not be saved. Leave this page?')
 })
 
 function handleEditorUpdate() {

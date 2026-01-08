@@ -105,7 +105,6 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         avatar = validated_data.get('avatar')
 
-        # 头像处理部分来自ChatGPT
         image = Image.open(avatar)
         image = image.convert("RGB")
         image.thumbnail((512, 512))
