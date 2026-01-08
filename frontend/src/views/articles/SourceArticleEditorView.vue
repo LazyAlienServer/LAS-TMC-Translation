@@ -45,6 +45,7 @@ async function handleSaved() {
         @update="handleEditorUpdate"
         @hydration-done="handleHydrationDone"
         @saved="handleSaved"
+        :is-dirty="isDirty"
     />
   </div>
 </template>

@@ -66,6 +66,7 @@ class SourceArticleWriteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.setdefault("title", "Untitled")
+        validated_data.setdefault("content", {"type": "doc", "content": [{"type": "paragraph"}]})
 
         return super().create(validated_data)
 

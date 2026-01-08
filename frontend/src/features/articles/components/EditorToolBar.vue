@@ -54,6 +54,15 @@ const props = defineProps({
     default: false,
     required: true
   },
+  isSaving: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+  isDirty: {
+    type: Boolean,
+    required: true,
+  }
 })
 
 const isHeading1 = computed(() => props.editor.isActive('heading', { level: 1 }))
@@ -240,15 +249,30 @@ function addVideo() {
   <div class="flex flex-row justify-between">
 
     <!-- Left Section -->
-    <div class="flex flex-row justify-center gap-2 p-2 items-center w-1/7">
-      <router-link
-          :to="{ name: 'my-articles' }"
-          class="editor-actions-btn group items-center px-4 py-0.5 gap-x-2"
-      >
-        <ArrowLeftToLine size="18"/>
-        <span class="text-[15px]">Leave</span>
-        <span class="editor-toolbar-btn-tooltip">Back to my articles</span>
-      </router-link>
+    <div class="flex flex-row justify-centeritems-center w-1/7">
+
+      <div class="flex-1/2 flex flex-row items-center justify-center">
+        <router-link
+            :to="{ name: 'my-articles' }"
+            class="editor-actions-btn group"
+        >
+          <ArrowLeftToLine size="21"/>
+          <span class="editor-toolbar-btn-tooltip">Back to my articles</span>
+        </router-link>
+      </div>
+
+      <div class="flex-1/2 flex flex-row items-center justify-center">
+        <span class="text-[10px] font-semibold" v-if="isSaving">
+          Saving
+        </span>
+        <span class="text-[10px] font-semibold" v-else-if="isDirty">
+          Changes not saved
+        </span>
+        <span class="text-[10px] font-semibold" v-else>
+          Changes saved
+        </span>
+      </div>
+
     </div>
 
     <!-- Center Section -->
@@ -606,7 +630,7 @@ function addVideo() {
     </div>
 
     <!-- Right Section -->
-    <div class="flex flex-row justify-center gap-2 p-2 items-center w-1/7">
+    <div class="flex flex-row justify-center gap-2 items-center w-1/7">
       <button
           type="button"
           class="editor-actions-btn group"

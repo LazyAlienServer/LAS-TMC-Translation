@@ -26,6 +26,13 @@ const id = ref(null)
 const title = ref(null)
 const content = ref(null)
 
+const props = defineProps({
+  isDirty: {
+    type: Boolean,
+    required: true,
+  }
+})
+
 async function handleImageUpload(editor, files) {
   for (const file of files) {
     if (!file.type.startsWith('image/')) continue
@@ -154,10 +161,11 @@ onMounted(async () => {
 })
 
 const loading = ref(false);
+const isSaving = ref(false);
 const emit = defineEmits(['update', 'hydration-done', 'saved'])
 
 async function handleSave() {
-  loading.value = true;
+  isSaving.value = true;
 
   const titleText = title_editor.value.getText().trim();
   const contentJSON = content_editor.value.getJSON();
@@ -172,13 +180,18 @@ async function handleSave() {
     console.error("Failed to save the article", error);
 
   } finally {
-    loading.value = false;
+    isSaving.value = false;
   }
 }
 
 async function handleSubmit() {
-  loading.value = true;
+  console.log(props.isDirty)
+  if (props.isDirty) {
+    toast.error("Please save your changes before you submit!")
+    return;
+  }
 
+  loading.value = true;
   try {
     await submitArticle(id.value);
     toast.success("Article submitted successfully!");
@@ -217,6 +230,8 @@ async function handleDelete() {
         v-if="content_editor"
         :editor="content_editor"
         :loading="loading"
+        :is-saving="isSaving"
+        :is-dirty="isDirty"
         @save="handleSave"
         @submit="handleSubmit"
         @delete="handleDelete"

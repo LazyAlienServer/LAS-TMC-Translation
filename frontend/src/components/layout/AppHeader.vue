@@ -52,6 +52,7 @@ async function createArticle() {
     const response = await createSourceArticle()
     const id = response.data.id
     console.log("Article successfully created!")
+    toggleCreate()
     await router.push({
       name: "article-editor",
       params: { id }
