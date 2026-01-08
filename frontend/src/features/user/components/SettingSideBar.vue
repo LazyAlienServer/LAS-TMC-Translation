@@ -22,14 +22,14 @@ const avatarUrl = computed(() => import.meta.env.VITE_API_BASE_URL + userStore.u
 
       <div class="flex flex-col mb-0.5">
         <p class="text-[22px] font-semibold">{{ userInfo?.username }}</p>
-        <p class="text-[12px] ml-0.5 text-gray-600 dark:text-gray-200">{{ userInfo?.email }}</p>
+        <p class="text-[12px] ml-0.5 text-gray-600">{{ userInfo?.email }}</p>
       </div>
 
     </div>
 
     <div class="flex flex-col gap-y-3">
 
-      <router-link to="/settings/appearance" class="sidebar-link">
+      <router-link :to="{ name: 'appearance' }" class="sidebar-link">
         <PaintBrushIcon class="sidebar-icon" />
         Appearance
       </router-link>

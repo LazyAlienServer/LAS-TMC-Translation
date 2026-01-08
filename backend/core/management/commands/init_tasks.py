@@ -47,13 +47,19 @@ class Command(BaseCommand):
                 "schedule": day_schedule,
                 "args": [90],
             },
+            {
+                "name": "cleanup unreferenced article images",
+                "task": "articles.tasks.cleanup_unreferenced_article_images",
+                "schedule": day_schedule,
+                "args": [1],  # grace_days=1
+            },
         ]
 
         # Delete all tasks that does not exist in task_configs
         existing_tasks = PeriodicTask.objects.all()
-        required_tasks = [conf["task"] for conf in task_configs]
+        required_names = [conf["name"] for conf in task_configs]
         for task in existing_tasks:
-            if task.task not in required_tasks:
+            if task.name not in required_names:
                 self.stdout.write(
                     self.style.WARNING(f"Deleting old task: {task.name} ({task.task})")
                 )
@@ -64,20 +70,21 @@ class Command(BaseCommand):
 
             # Create all uncreated tasks in task_configs
             task, created = PeriodicTask.objects.get_or_create(
-                interval=conf["schedule"],
                 name=conf["name"],
-                task=conf["task"],
                 defaults={
-                    'enabled': True,
-                    'start_time': timezone.now(),
-                    'args': json.dumps(conf["args"]),
+                    "task": conf["task"],
+                    "interval": conf["schedule"],
+                    "enabled": True,
+                    "start_time": timezone.now(),
+                    "args": json.dumps(conf["args"]),
                 },
             )
 
             # Update the config of all existing tasks
             if not created:
-                task.enabled = True
+                task.task = conf["task"]
                 task.interval = conf["schedule"]
+                task.enabled = True
                 task.start_time = timezone.now()
                 task.args = json.dumps(conf["args"])
                 task.save()

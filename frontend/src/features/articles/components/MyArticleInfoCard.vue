@@ -24,8 +24,8 @@ const props = defineProps({
         {{ article?.title }}
       </router-link>
 
-      <div class="border border-gray-300 dark:border-gray-200 rounded-full flex flex-col py-0.5 px-2 items-center">
-        <span class="text-[12px] font-bold text-gray-800 dark:text-gray-200">{{ article?.status_display }}</span>
+      <div class="border border-gray-300 rounded-full flex flex-col py-0.5 px-2 items-center">
+        <span class="text-[12px] font-bold text-gray-600 ">{{ article?.status_display }}</span>
       </div>
 
     </div>

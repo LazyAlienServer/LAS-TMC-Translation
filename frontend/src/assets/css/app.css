@@ -102,15 +102,6 @@
     .login-register-icon {
         @apply h-4.5 w-4.5 fill-current mb-1;
     }
-    .article-card {
-        @apply flex flex-col gap-2 p-4 w-full bg-white rounded-lg border-1 border-gray-200 shadow items-start
-        hover:bg-gray-200
-        dark:bg-dark dark:border-gray-200 dark:hover:bg-gray-600;
-    }
-    .article-sidebar-filter-query {
-        @apply flex flex-row items-center border border-gray-300 rounded-sm py-1 px-1.5 whitespace-nowrap
-        hover:bg-gray-200;
-    }
     .form-btn {
         @apply text-[13px] py-2 px-2.5 bg-green-600 hover:bg-green-700 w-auto rounded-md font-semibold self-center text-white
     }

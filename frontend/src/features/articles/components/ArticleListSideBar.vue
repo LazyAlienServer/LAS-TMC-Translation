@@ -40,7 +40,7 @@ function updateUrl(patch = {}) {
 
       <div class="flex flex-col mb-0.5">
         <p class="text-[22px] font-semibold">{{ userInfo?.username }}</p>
-        <p class="text-[12px] ml-0.5 text-gray-600 dark:text-gray-200">{{ userInfo?.email }}</p>
+        <p class="text-[12px] ml-0.5 text-gray-600">{{ userInfo?.email }}</p>
       </div>
 
     </div>
